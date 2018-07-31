@@ -80,7 +80,14 @@ class IngDao(private val helper: MyDatabaseOpenHelper = MyDatabaseOpenHelper()) 
             }
         }
 
-        alterList(list,type)
+        var index = list.size-1
+        while (index>=0){
+            val temp = list[index]
+            if(temp.lastSignDay == getNowDateString()){
+                temp.isFinish = true
+            }
+            index--
+        }
 
         return list
     }

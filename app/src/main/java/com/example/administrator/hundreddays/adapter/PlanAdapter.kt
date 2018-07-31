@@ -22,6 +22,9 @@ class PlanAdapter(data: MutableList<PlanIng>?) : BaseQuickAdapter<PlanIng, BaseV
                 .load(item.plan?.imgUrl)
                 .into(helper.getView(R.id.item_plan_image))
 
+        if(item.isFinish)
+            helper.setText(R.id.item_plan_sign, "今日已签到")
+
         helper.addOnClickListener(R.id.item_plan_sign)
     }
 }

@@ -19,6 +19,7 @@ import com.example.administrator.hundreddays.bean.Plan
 import com.example.administrator.hundreddays.bean.PlanIng
 import com.example.administrator.hundreddays.presenter.MainPresenter
 import com.example.administrator.hundreddays.sqlite.PlanDao
+import com.example.administrator.hundreddays.sqlite.SignDao
 import com.example.administrator.hundreddays.util.PagingScrollHelper
 import com.example.administrator.hundreddays.util.getBitmapFromLocal
 import com.example.administrator.hundreddays.util.getNowDateString
@@ -54,7 +55,7 @@ class MainActivity : BaseActivity() , MainView {
         initEvent()
         checkList()
         title.setOnClickListener{ alert("你好","标题"){
-            positiveButton("yes") {}
+            positiveButton("yes") { SignDao().alter() }
             negativeButton("no"){}
         }.show()}
     }
@@ -114,15 +115,13 @@ class MainActivity : BaseActivity() , MainView {
         planIng.lastSignDay = getNowDateString()
         mainPresenter.sign(planIng)
         //------------------------------------------
-
+        planIng.isFinish = true
+        adapter.notifyItemChanged(index)
     }
 
     fun checkList(){
         if(planList.isNotEmpty()) {
-            planIndex = 0
-            mainPresenter.getBlurBitmap(planList[0].plan?.imgUrl)
-            title.text = planList[0].plan?.title
-
+            changeIndex(0)
         }else{
             title.visibility = View.GONE
             indicate.visibility = View.GONE

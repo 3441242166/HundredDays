@@ -9,7 +9,7 @@ import com.example.administrator.hundreddays.constant.*
 
 class SignDao(val helper: MyDatabaseOpenHelper = MyDatabaseOpenHelper()) {
 
-    private val TAG = "PlanDao"
+    private val TAG = "SignDao"
 
     fun insert(sign: Sign): Long {
         var code = -1L
@@ -25,6 +25,16 @@ class SignDao(val helper: MyDatabaseOpenHelper = MyDatabaseOpenHelper()) {
         }
 
         return code
+    }
+
+    fun delete(id: Long?): Int {
+        var count = 0
+
+        helper.use {
+            count = delete(TABLE_SIGN,"$DB_ID= $id",null)
+        }
+
+        return count
     }
 
     fun alter(): ArrayList<Sign> {

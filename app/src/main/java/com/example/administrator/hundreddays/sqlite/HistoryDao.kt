@@ -5,6 +5,7 @@ import android.util.Log
 import com.example.administrator.hundreddays.bean.History
 import com.example.administrator.hundreddays.bean.Plan
 import com.example.administrator.hundreddays.constant.*
+import org.jetbrains.anko.db.select
 
 class HistoryDao(val helper: MyDatabaseOpenHelper = MyDatabaseOpenHelper()) {
 
@@ -24,12 +25,14 @@ class HistoryDao(val helper: MyDatabaseOpenHelper = MyDatabaseOpenHelper()) {
         return code
     }
 
-    fun delete(plan: Plan){
+    fun delete(id: Long?): Int {
+        var count = 0
 
         helper.use {
-
+            count = delete(TABLE_HISTORY,"$DB_ID= $id",null)
         }
 
+        return count
     }
 
     fun alter(): ArrayList<History> {
@@ -37,6 +40,7 @@ class HistoryDao(val helper: MyDatabaseOpenHelper = MyDatabaseOpenHelper()) {
         var list = arrayListOf<History>()
 
         helper.use {
+
             val cursor = rawQuery(sql, null)
             if (cursor.moveToFirst()) {
 

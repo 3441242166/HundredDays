@@ -25,10 +25,12 @@ class MyDatabaseOpenHelper(ctx: Context = BaseApplication.context) : ManagedSQLi
                 DB_FREQUENT_DAY to INTEGER,
                 DB_TARGET_DAY to INTEGER)
 
-        db.createTable(TABLE_SIGN, true,
-                DB_ID to INTEGER + PRIMARY_KEY + UNIQUE,
-                DB_DATE to TEXT,
-                DB_MESSAGE to TEXT)
+//        db.createTable(TABLE_SIGN, true,
+//                DB_ID to INTEGER + PRIMARY_KEY + UNIQUE,
+//                DB_DATE to TEXT,
+//                DB_MESSAGE to TEXT)
+
+        db.createTable("CREATE TABLE IF NOT EXISTS `$TABLE_SIGN`($DB_ID INTEGER , $DB_DATE TEXT, $DB_MESSAGE TEXT, PRIMARY KEY($DB_ID,$DB_DATE))")
 
         db.createTable(TABLE_ING, true,
                 DB_ID to INTEGER + PRIMARY_KEY + UNIQUE,
@@ -39,10 +41,15 @@ class MyDatabaseOpenHelper(ctx: Context = BaseApplication.context) : ManagedSQLi
                 DB_ID to INTEGER + PRIMARY_KEY + UNIQUE,
                 DB_KEEP_DAY to INTEGER)
 
+
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         // Here you can upgrade tables, as usual
 
+    }
+
+    private fun SQLiteDatabase.createTable(sql:String) {
+        execSQL(sql)
     }
 }

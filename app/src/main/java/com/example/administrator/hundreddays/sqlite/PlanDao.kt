@@ -31,12 +31,14 @@ class PlanDao(val helper: MyDatabaseOpenHelper = MyDatabaseOpenHelper()) {
         return code
     }
 
-    fun delete(plan: Plan){
+    fun delete(id: Long?): Int {
+        var count = 0
 
         helper.use {
-
+            count = delete(TABLE_PLAN,"$DB_ID= $id",null)
         }
 
+        return count
     }
 
     fun alterByID(ID:Long?): Plan {

@@ -10,6 +10,7 @@ import com.bumptech.glide.request.transition.Transition
 import com.example.administrator.hundreddays.base.BarBaseActivity
 import com.example.administrator.hundreddays.bean.History
 import com.example.administrator.hundreddays.bean.PlanIng
+import com.example.administrator.hundreddays.bean.Sign
 import com.example.administrator.hundreddays.sqlite.HistoryDao
 import com.example.administrator.hundreddays.sqlite.IngDao
 import com.example.administrator.hundreddays.sqlite.PlanDao
@@ -35,6 +36,7 @@ class MainPresenter(val view: MainView, private val context: Context) {
                 IngDao().delete(ing.id)
                 val history = History(ing.id)
                 history.keppDay = SignDao().alter(ing.id?:-1).size
+                addHistory(history)
                 list.removeAt(index)
                 sum++
             }
@@ -49,6 +51,7 @@ class MainPresenter(val view: MainView, private val context: Context) {
 
     fun sign(planIng: PlanIng) {
         IngDao().update(planIng)
+        SignDao().insert(Sign(planIng.id,"", planIng.lastSignDay,null))
     }
 
     fun addHistory(history: History){
