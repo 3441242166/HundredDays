@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="days">
+        <item>30天</item>
+        <item>31天</item>
+        <item>32天</item>
+        <item>33天</item>
+        <item>34天</item>
+        <item>35天</item>
+        <item>36天</item>
+        <item>37天</item>
+        <item>38天</item>
+        <item>39天</item>
+        <item>40天</item>
+        <item>41天</item>
+        <item>42天</item>
+        <item>43天</item>
+        <item>44天</item>
+        <item>45天</item>
+        <item>46天</item>
+        <item>47天</item>
+        <item>48天</item>
+        <item>49天</item>
+        <item>50天</item>
+    </string-array>
+
+    <string-array name="frequence">
+        <item>每一天</item>
+        <item>每二天</item>
+        <item>每三天</item>
+        <item>每四天</item>
+        <item>每五天</item>
+        <item>每六天</item>
+        <item>每周</item>
+    </string-array>
+
+</resources>
