@@ -7,9 +7,9 @@ import com.example.administrator.hundreddays.constant.*
 import org.jetbrains.anko.db.*
 
 class MyDatabaseOpenHelper(ctx: Context = BaseApplication.context) : ManagedSQLiteOpenHelper(ctx, "MyDatabase", null, 1) {
+
     companion object {
         private val TAG = "MyDatabaseOpenHelper"
-
         val instance: MyDatabaseOpenHelper by lazy { MyDatabaseOpenHelper(BaseApplication.context) }
 
     }
@@ -25,11 +25,6 @@ class MyDatabaseOpenHelper(ctx: Context = BaseApplication.context) : ManagedSQLi
                 DB_FREQUENT_DAY to INTEGER,
                 DB_TARGET_DAY to INTEGER)
 
-//        db.createTable(TABLE_SIGN, true,
-//                DB_ID to INTEGER + PRIMARY_KEY + UNIQUE,
-//                DB_DATE to TEXT,
-//                DB_MESSAGE to TEXT)
-
         db.createTable("CREATE TABLE IF NOT EXISTS `$TABLE_SIGN`($DB_ID INTEGER , $DB_DATE TEXT, $DB_MESSAGE TEXT, PRIMARY KEY($DB_ID,$DB_DATE))")
 
         db.createTable(TABLE_ING, true,
@@ -40,7 +35,6 @@ class MyDatabaseOpenHelper(ctx: Context = BaseApplication.context) : ManagedSQLi
         db.createTable(TABLE_HISTORY, true,
                 DB_ID to INTEGER + PRIMARY_KEY + UNIQUE,
                 DB_KEEP_DAY to INTEGER)
-
 
     }
 

@@ -67,6 +67,12 @@ import android.graphics.Bitmap
         img.setImageBitmap(bitmap)
     }
 
+fun blurImageView(context: Context, img: Bitmap, level: Float): Bitmap? {
+    // 将图片处理成模糊
+    val bitmap = blurBitmap(context,img, level)
+    return bitmap
+}
+
     fun blurImageView(context: Context, imgUrl: String?, level: Float): Bitmap? {
         // 将图片处理成模糊
         return blurBitmap(context,Bitmap.createBitmap(getBitmapFromLocal(imgUrl)), level)

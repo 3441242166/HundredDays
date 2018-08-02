@@ -64,12 +64,11 @@ class MainPresenter(val view: MainView, private val context: Context) {
                 .asBitmap()
                 .load(path)
                 .into(target)
-        view.setBackgroud(blurImageView(context,path,3f)!!)
     }
 
     private val target =object :  SimpleTarget<Bitmap>(500,700){
         override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-            view.setBackgroud(resource)
+            view.setBackgroud(blurImageView(context,resource,3f)!!)
         }
     }
 

@@ -2,9 +2,15 @@ package com.example.administrator.hundreddays.constant
 
 const val CAMERA_CODE:Int = 0
 const val GALLERY_CODE:Int = 1
+const val CREATE_PLAN:Int = 0
+
+const val CREATE_SUCCESS:Int = 0
+
 
 const val FILE_NAME = "HundredDays"
+const val DATA = "data"
 
+//--------------------------------------------------------------------------------------------------
 const val TABLE_PLAN = "plan"
 const val TABLE_ING = "ing"
 const val TABLE_HISTORY = "history"
@@ -21,3 +27,4 @@ const val DB_KEEP_DAY = "keep_day"
 const val DB_FREQUENT_DAY = "frequent_day"
 const val DB_MESSAGE = "message"
 const val DB_REMIND = "remind_time"
+//--------------------------------------------------------------------------------------------------

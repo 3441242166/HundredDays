@@ -1,27 +1,26 @@
 package com.example.administrator.hundreddays.activity
 
+import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.LinearSnapHelper
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import com.bumptech.glide.Glide
 import com.example.administrator.hundreddays.R
 import com.example.administrator.hundreddays.adapter.PlanAdapter
 import com.example.administrator.hundreddays.base.BaseActivity
-import com.example.administrator.hundreddays.base.BaseApplication
-import com.example.administrator.hundreddays.bean.Plan
 import com.example.administrator.hundreddays.bean.PlanIng
+import com.example.administrator.hundreddays.constant.CAMERA_CODE
+import com.example.administrator.hundreddays.constant.CREATE_PLAN
+import com.example.administrator.hundreddays.constant.CREATE_SUCCESS
+import com.example.administrator.hundreddays.constant.DATA
 import com.example.administrator.hundreddays.presenter.MainPresenter
-import com.example.administrator.hundreddays.sqlite.PlanDao
 import com.example.administrator.hundreddays.sqlite.SignDao
 import com.example.administrator.hundreddays.util.PagingScrollHelper
-import com.example.administrator.hundreddays.util.getBitmapFromLocal
 import com.example.administrator.hundreddays.util.getNowDateString
 import com.example.administrator.hundreddays.view.MainView
 import org.jetbrains.anko.find
@@ -44,7 +43,7 @@ class MainActivity : BaseActivity() , MainView {
 
     private lateinit var adapter: PlanAdapter
     private var scrollHelper: PagingScrollHelper = PagingScrollHelper()
-    private var planIndex = 0
+    private var planIndex = -1
     private lateinit var planList:MutableList<PlanIng>
 
     override val contentView: Int get() = R.layout.activity_main
@@ -60,12 +59,15 @@ class MainActivity : BaseActivity() , MainView {
         }.show()}
     }
 
-
     private fun initEvent() {
-        fab.setOnClickListener { startActivity<CreatePlanActivity>() }
+        fab.setOnClickListener {
+            startActivityForResult(Intent(
+                    this,
+                    CreatePlanActivity::class.java
+            ),CREATE_PLAN)}
 
         adapter.setOnItemClickListener { adapter, view, position ->
-            startActivity<PlanMessageActivity>()
+            startActivity<PlanMessageActivity>(DATA to planList[position].plan)
         }
 
         adapter.setOnItemChildClickListener { adapter, view, position ->
@@ -153,4 +155,15 @@ class MainActivity : BaseActivity() , MainView {
             positiveButton("yes") { dialog -> dialog.dismiss() }
         }.show()
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when (resultCode) {
+            CREATE_SUCCESS ->{
+                mainPresenter.initData()
+                adapter.setNewData(planList)
+                indicate.text = "${planIndex+1}/${planList.size}"
+            }
+        }
+    }
+
 }

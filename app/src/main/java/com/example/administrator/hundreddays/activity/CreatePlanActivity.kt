@@ -16,8 +16,7 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import com.bumptech.glide.Glide
 import com.example.administrator.hundreddays.bean.Plan
-import com.example.administrator.hundreddays.constant.CAMERA_CODE
-import com.example.administrator.hundreddays.constant.GALLERY_CODE
+import com.example.administrator.hundreddays.constant.*
 import com.example.administrator.hundreddays.sqlite.PlanDao
 import com.example.administrator.hundreddays.util.getBitmapFromLocal
 import com.example.administrator.hundreddays.util.getBitmapFromUri
@@ -152,6 +151,8 @@ class CreatePlanActivity : BarBaseActivity() ,CreatePlanView {
 
     override fun success(data: String) {
         toast(data)
+        val intent = Intent()
+        setResult(CREATE_SUCCESS, intent)
         finish()
     }
 
