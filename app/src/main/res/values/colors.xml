@@ -7,4 +7,5 @@
     <color name="itemColor">#cacaca</color>
     <color name="pureBlack">#000000</color>
     <color name="secondBlack">#1e1e1e</color>
+    <color name="fabColor">#7e00b7ff</color>
 </resources>

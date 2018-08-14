@@ -1,12 +1,9 @@
 package com.example.administrator.hundreddays.sqlite
 
-import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.util.Log
 import com.example.administrator.hundreddays.bean.Plan
 import com.example.administrator.hundreddays.constant.*
-import org.jetbrains.anko.db.*
-import javax.security.auth.login.LoginException
 
 class PlanDao(val helper: MyDatabaseOpenHelper = MyDatabaseOpenHelper()) {
 
@@ -20,7 +17,7 @@ class PlanDao(val helper: MyDatabaseOpenHelper = MyDatabaseOpenHelper()) {
         cv.put(DB_REMIND,plan.remindTime)
         cv.put(DB_FREQUENT_DAY,plan.frequentDay)
         cv.put(DB_CREATE_DATE,plan.createDateTime)
-        cv.put(DB_IMAGE_PATH,plan.imgUrl)
+        cv.put(DB_IMAGE_PATH,plan.imgPath)
         cv.put(DB_TITLE,plan.title)
 
         helper.use{
@@ -52,7 +49,7 @@ class PlanDao(val helper: MyDatabaseOpenHelper = MyDatabaseOpenHelper()) {
             plan.ID = cursor.getLong(0)
             plan.title = cursor.getString(1)
             plan.remindTime = cursor.getString(2)
-            plan.imgUrl = cursor.getString(3)
+            plan.imgPath = cursor.getString(3)
             plan.createDateTime = cursor.getString(4)
             plan.frequentDay = cursor.getInt(5)
             plan.targetDay = cursor.getInt(6)
@@ -78,7 +75,7 @@ class PlanDao(val helper: MyDatabaseOpenHelper = MyDatabaseOpenHelper()) {
                     plan.ID = cursor.getLong(0)
                     plan.title = cursor.getString(1)
                     plan.remindTime = cursor.getString(2)
-                    plan.imgUrl = cursor.getString(3)
+                    plan.imgPath = cursor.getString(3)
                     plan.createDateTime = cursor.getString(4)
                     plan.frequentDay = cursor.getInt(5)
                     plan.targetDay = cursor.getInt(6)

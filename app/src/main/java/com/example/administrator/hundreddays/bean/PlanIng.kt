@@ -5,7 +5,9 @@ import android.os.Parcelable
 
 
 data class PlanIng(var id: Long?, var insistentDay: Int, var lastSignDay: String, var plan: Plan?, var isFinish: Boolean = false) : Parcelable {
-    constructor(id: Long?) : this(id, 0, "", null)
+    constructor(id: Long?,lastSignDay: String) : this(id, 0, lastSignDay, null)
+
+    constructor(id: Long?): this(id, 0, "", null)
 
     constructor(source: Parcel) : this(
             source.readValue(Long::class.java.classLoader) as Long?,

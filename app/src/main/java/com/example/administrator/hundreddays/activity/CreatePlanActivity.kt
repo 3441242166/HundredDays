@@ -14,38 +14,37 @@ import android.content.Intent
 import android.content.res.TypedArray
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.net.Uri
+import android.os.Environment
+import android.util.Log
+import android.widget.EditText
 import com.bumptech.glide.Glide
 import com.example.administrator.hundreddays.bean.Plan
 import com.example.administrator.hundreddays.constant.*
-import com.example.administrator.hundreddays.sqlite.PlanDao
-import com.example.administrator.hundreddays.util.getBitmapFromLocal
-import com.example.administrator.hundreddays.util.getBitmapFromUri
-import com.example.administrator.hundreddays.util.getNowDateString
-import com.example.administrator.hundreddays.util.getPathFromUri
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog
 import java.util.*
+import com.example.administrator.hundreddays.util.*
+import java.io.File
 
 
 class CreatePlanActivity : BarBaseActivity() ,CreatePlanView {
+    private val TAG = "CreatePlanActivity"
 
     private val presenter = CreatePlanPresenter(this,this)
 
-    lateinit var txTitle:TextView
+    lateinit var txTitle: EditText
     lateinit var txDays:TextView
     lateinit var txFrequence:TextView
     lateinit var txRemind:TextView
     lateinit var img:ImageView
 
     var bitmap:Bitmap? = null
-    var bitmapPath:String =""
     var planDays:Int = 30
     var frequentDay:Int = 1
 
     lateinit var processDialog:MaterialDialog
 
-    override val contentView: Int
-        get() = R.layout.activity_creat_plan
-
+    override val contentView: Int get() = R.layout.activity_creat_plan
 
     override fun init(savedInstanceState: Bundle?) {
         setTitle("创建新计划")
@@ -60,8 +59,8 @@ class CreatePlanActivity : BarBaseActivity() ,CreatePlanView {
         txRemind = find(R.id.ac_creat_remind)
         img = find(R.id.ac_creat_img)
 
-        processDialog = MaterialDialog.Builder(this).title("")
-                .progress(false, 100, true)
+        processDialog = MaterialDialog.Builder(this).title("Ing....")
+                .progress(true, 100, true)
                 .build()
     }
 
@@ -77,13 +76,6 @@ class CreatePlanActivity : BarBaseActivity() ,CreatePlanView {
                 packagePlan()
             }
         })
-
-        txTitle.setOnClickListener{
-            MaterialDialog.Builder(this).title("计划名称")
-                    .input("输入标题",txTitle.text) { _, input ->
-                        txTitle.text = input
-                    }.show()
-        }
 
         txDays.setOnClickListener{
             val ar: TypedArray =  resources.obtainTypedArray(R.array.days)
@@ -141,7 +133,7 @@ class CreatePlanActivity : BarBaseActivity() ,CreatePlanView {
     }
 
     fun packagePlan(){
-        val plan = Plan(null,txTitle.text.toString(),txRemind.text.toString(),bitmapPath,getNowDateString(),frequentDay,planDays)
+        val plan = Plan(null,txTitle.text.toString(),txRemind.text.toString(),"",getNowDateString(),frequentDay,planDays)
         presenter.createPlan(plan,bitmap)
     }
 
@@ -165,15 +157,17 @@ class CreatePlanActivity : BarBaseActivity() ,CreatePlanView {
     }
 
     override fun startIntent(intent: Intent, code: Int) {
+        val imageUri = Uri.fromFile(File(Environment.getExternalStorageDirectory(), "image.jpg"))
+        //指定照片保存路径（SD卡），image.jpg为一个临时文件，每次拍照后这个图片都会被替换
         startActivityForResult(intent,code)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             CAMERA_CODE ->{
-                val extras = data?.extras
                 //获得拍的照片
-                bitmap = extras?.getParcelable("data")
+                bitmap = data!!.extras.getParcelable("data") as Bitmap
+               // bitmap = getBitmapFromLocal(com.example.administrator.hundreddays.util.CREATE_PLAN)
                 Glide.with(this).load(bitmap).into(img)
             }
             GALLERY_CODE ->{
@@ -186,10 +180,6 @@ class CreatePlanActivity : BarBaseActivity() ,CreatePlanView {
 
                 Glide.with(this).load(bitmap).into(img)
             }
-            else -> {
-
-            }
-
         }
     }
 

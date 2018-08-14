@@ -3,7 +3,7 @@ package com.example.administrator.hundreddays.bean
 import android.os.Parcel
 import android.os.Parcelable
 
-data class Plan(var ID: Long? = null, var title: String, var remindTime: String, var imgUrl: String, var createDateTime: String, var frequentDay: Int, var targetDay: Int) : Parcelable {
+data class Plan(var ID: Long? = null, var title: String, var remindTime: String, var imgPath: String, var createDateTime: String, var frequentDay: Int, var targetDay: Int) : Parcelable {
     constructor() : this(null, "", "", "", "", 1, 30)
 
     constructor(source: Parcel) : this(
@@ -22,7 +22,7 @@ data class Plan(var ID: Long? = null, var title: String, var remindTime: String,
         writeValue(ID)
         writeString(title)
         writeString(remindTime)
-        writeString(imgUrl)
+        writeString(imgPath)
         writeString(createDateTime)
         writeInt(frequentDay)
         writeInt(targetDay)

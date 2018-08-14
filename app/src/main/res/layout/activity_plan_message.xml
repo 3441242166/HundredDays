@@ -24,7 +24,7 @@
                 android:layout_height="match_parent"
                 app:layout_collapseMode="parallax"
                 app:layout_collapseParallaxMultiplier="0"
-                layout="@layout/plan_message_head"
+                layout="@layout/head_plan_message"
                 />
 
         </android.support.design.widget.CollapsingToolbarLayout>

@@ -20,7 +20,17 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.CreatePlanActivity" />
-        <activity android:name=".activity.PlanMessageActivity"></activity>
+        <activity android:name=".activity.PlanMessageActivity" />
+        <activity android:name=".activity.MenuActivity" />
+        <activity android:name=".activity.SignActivity" />
+        <activity
+            android:name=".activity.HistoryActivity"
+            android:label="@string/title_activity_task"
+            android:theme="@style/NoActionBarTheme" />
+        <activity
+            android:name=".activity.StatisticActivity"
+            android:label="@string/title_activity_statistic"
+            android:theme="@style/NoActionBarTheme"></activity>
     </application>
 
 </manifest>

@@ -70,7 +70,7 @@ class PagingScrollHelper {
         updateLayoutManger()
     }
 
-    fun updateLayoutManger() {
+    private fun updateLayoutManger() {
         val layoutManager = mRecyclerView!!.layoutManager
         if (layoutManager != null) {
             if (layoutManager.canScrollVertically()) {

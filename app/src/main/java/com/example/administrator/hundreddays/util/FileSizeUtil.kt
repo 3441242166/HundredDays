@@ -66,8 +66,7 @@ fun getAutoFileOrFilesSize(filePath: String): String {
 private fun getFileSize(file: File): Long {
     var size: Long = 0
     if (file.exists()) {
-        var fis: FileInputStream? = null
-        fis = FileInputStream(file)
+        val fis =  FileInputStream(file)
         size = fis.available().toLong()
     } else {
         file.createNewFile()
@@ -88,9 +87,9 @@ private fun getFileSizes(f: File): Long {
     val flist = f.listFiles()
     for (i in flist!!.indices) {
         if (flist[i].isDirectory) {
-            size = size + getFileSizes(flist[i])
+            size += getFileSizes(flist[i])
         } else {
-            size = size + getFileSize(flist[i])
+            size += getFileSize(flist[i])
         }
     }
     return size

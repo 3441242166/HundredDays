@@ -34,7 +34,8 @@ class MyDatabaseOpenHelper(ctx: Context = BaseApplication.context) : ManagedSQLi
 
         db.createTable(TABLE_HISTORY, true,
                 DB_ID to INTEGER + PRIMARY_KEY + UNIQUE,
-                DB_KEEP_DAY to INTEGER)
+                DB_KEEP_DAY to INTEGER,
+                DB_IS_FINISH to REAL)
 
     }
 

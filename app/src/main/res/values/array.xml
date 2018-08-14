@@ -23,6 +23,57 @@
         <item>48天</item>
         <item>49天</item>
         <item>50天</item>
+        <item>51天</item>
+        <item>52天</item>
+        <item>53天</item>
+        <item>54天</item>
+        <item>55天</item>
+        <item>56天</item>
+        <item>57天</item>
+        <item>58天</item>
+        <item>59天</item>
+        <item>60天</item>
+        <item>61天</item>
+        <item>62天</item>
+        <item>63天</item>
+        <item>64天</item>
+        <item>65天</item>
+        <item>66天</item>
+        <item>67天</item>
+        <item>68天</item>
+        <item>69天</item>
+        <item>70天</item>
+        <item>71天</item>
+        <item>72天</item>
+        <item>73天</item>
+        <item>74天</item>
+        <item>75天</item>
+        <item>76天</item>
+        <item>77天</item>
+        <item>78天</item>
+        <item>79天</item>
+        <item>80天</item>
+        <item>81天</item>
+        <item>82天</item>
+        <item>83天</item>
+        <item>84天</item>
+        <item>85天</item>
+        <item>86天</item>
+        <item>87天</item>
+        <item>88天</item>
+        <item>89天</item>
+        <item>90天</item>
+        <item>91天</item>
+        <item>92天</item>
+        <item>93天</item>
+        <item>94天</item>
+        <item>95天</item>
+        <item>96天</item>
+        <item>97天</item>
+        <item>98天</item>
+        <item>99天</item>
+        <item>100天</item>
+
     </string-array>
 
     <string-array name="frequence">
@@ -33,6 +84,22 @@
         <item>每五天</item>
         <item>每六天</item>
         <item>每周</item>
+    </string-array>
+
+    <string-array name="type">
+        <item>所有</item>
+        <item>已完成</item>
+        <item>未完成</item>
+    </string-array>
+
+    <string-array name="sort">
+        <item>时间顺序</item>
+        <item>签到天数</item>
+    </string-array>
+
+    <string-array name="other">
+        <item>时间顺序</item>
+        <item>签到天数</item>
     </string-array>
 
 </resources>

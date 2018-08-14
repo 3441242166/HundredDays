@@ -8,6 +8,7 @@ import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.provider.MediaStore
 import android.text.TextUtils
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -21,57 +22,39 @@ import com.example.administrator.hundreddays.constant.CAMERA_CODE
 import com.example.administrator.hundreddays.constant.GALLERY_CODE
 import com.example.administrator.hundreddays.sqlite.IngDao
 import com.example.administrator.hundreddays.sqlite.PlanDao
-import com.example.administrator.hundreddays.util.getNowDateTimeString
-import com.example.administrator.hundreddays.util.saveBitmapToLocal
+import com.example.administrator.hundreddays.util.*
 import com.example.administrator.hundreddays.view.CreatePlanView
 import io.reactivex.Observable
-import io.reactivex.ObservableOnSubscribe
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
 import org.jetbrains.anko.find
-import java.util.*
+import java.io.File
 
 class CreatePlanPresenter(val view: CreatePlanView, private val context: Context) {
+    private val TAG = "CreatePlanPresenter"
 
     fun createPlan(plan: Plan,bitmap: Bitmap?){
+        if (TextUtils.isEmpty(plan.title)) {
+            view.failure(Throwable("标题不能为空"))
+            return
+        }
+
         view.before()
 
         Observable.create<Long> {
-            var code = -1L
-            var index: Long
+            plan.imgPath = compressImage(bitmap, getNowDateTimeString())!!
+            val index: Long = PlanDao().insert(plan)
+            Log.i(TAG,getAddDayString(getNowDateString(),-1))
+            IngDao().insert(PlanIng(index, getAddDayString(getNowDateString(),-1)))
 
-            while (true) {
-                if (TextUtils.isEmpty(plan.title)) {
-                    code = 1L
-                    break
-                }
-                plan.imgUrl = saveBitmapToLocal(getNowDateTimeString(), bitmap)
-                if (TextUtils.isEmpty(plan.imgUrl) || bitmap==null) {
-                    code = 2L
-                    break
-                }
-                index = PlanDao().insert(plan)
-                if (index == -1L ) {
-                    code = 3L
-                }
-                IngDao().insert(PlanIng(index))
-                break
-            }
-
-            it.onNext(code)
-
+            it.onNext(0)
         }
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     view.after()
-                    if(check(it)){
-                        view.success("创建成功")
-                    }
+                    view.success("创建成功")
                 }
-
-        view.after()
     }
 
     fun openSelectAvatarDialog(parentLayout:Int) {
@@ -109,6 +92,7 @@ class CreatePlanPresenter(val view: CreatePlanView, private val context: Context
     private fun takeCamera() {
         //构建隐式Intent
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        //intent.putExtra(MediaStore.EXTRA_OUTPUT,Uri.fromFile(File(CREATE_PLAN)))
         //调用系统相机
         view.startIntent(intent,CAMERA_CODE)
     }
@@ -119,17 +103,4 @@ class CreatePlanPresenter(val view: CreatePlanView, private val context: Context
         view.startIntent(intent,GALLERY_CODE)
     }
 
-    private fun check(code: Long?):Boolean{
-        when (code) {
-            1L ->
-                view.failure(Throwable("标题不能为空"))
-            2L ->
-                view.failure(Throwable("请选择一张背景图片"))
-            3L ->
-                view.failure(Throwable("创建计划失败"))
-            else ->
-                return true
-        }
-        return false
-    }
 }

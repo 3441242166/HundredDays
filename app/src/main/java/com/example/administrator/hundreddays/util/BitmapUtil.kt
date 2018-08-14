@@ -12,15 +12,11 @@ import android.util.Log
 import android.widget.ImageView
 import android.graphics.Bitmap
 
-
-
-
     private val TAG = "BitmapUtil"
     /**
      * 图片缩放比例
      */
     private val BITMAP_SCALE = 0.2f
-
 
     /**
      * 将Drawable对象转化为Bitmap对象
@@ -29,23 +25,21 @@ import android.graphics.Bitmap
      * @return 对应的Bitmap对象
      */
     private fun drawableToBitmap(drawable: Drawable): Bitmap {
-        val bitmap: Bitmap
 
         //如果本身就是BitmapDrawable类型 直接转换即可
         if (drawable is BitmapDrawable) {
-            if (drawable.bitmap != null) {
-                return drawable.bitmap
-            }
+            return drawable.bitmap
         }
 
-        //取得Drawable固有宽高
-        bitmap = if (drawable.intrinsicWidth <= 0 || drawable.intrinsicHeight <= 0) {
+        val bitmap: Bitmap = if (drawable.intrinsicWidth <= 0 || drawable.intrinsicHeight <= 0) {
             //创建一个1x1像素的单位色图
             Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
         } else {
             //直接设置一下宽高和ARGB
             Bitmap.createBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
         }
+
+        //取得Drawable固有宽高
 
         //重新绘制Bitmap
         val canvas = Canvas(bitmap)
@@ -67,11 +61,10 @@ import android.graphics.Bitmap
         img.setImageBitmap(bitmap)
     }
 
-fun blurImageView(context: Context, img: Bitmap, level: Float): Bitmap? {
-    // 将图片处理成模糊
-    val bitmap = blurBitmap(context,img, level)
-    return bitmap
-}
+    fun blurImageView(context: Context, img: Bitmap, level: Float): Bitmap? {
+        // 将图片处理成模糊
+        return blurBitmap(context,img, level)
+    }
 
     fun blurImageView(context: Context, imgUrl: String?, level: Float): Bitmap? {
         // 将图片处理成模糊
@@ -109,7 +102,7 @@ fun blurImageView(context: Context, img: Bitmap, level: Float): Bitmap? {
      */
     fun coverColor(context: Context, bitmap: Bitmap, color: Int): Drawable {
         val paint = Paint()
-        paint.setColor(color)
+        paint.color = color
         val rect = RectF(0f, 0f, bitmap.width.toFloat(), bitmap.height.toFloat())
         Canvas(bitmap).drawRoundRect(rect, 0f, 0f, paint)
         return BitmapDrawable(context.resources, bitmap)
@@ -132,9 +125,8 @@ fun blurImageView(context: Context, img: Bitmap, level: Float): Bitmap? {
         if (blurRadius > 25) {
             blurRadius = 25f
         }
-        var outputBitmap: Bitmap? = null
+        var outputBitmap: Bitmap?
         try {
-
             Class.forName("android.renderscript.ScriptIntrinsicBlur")
             // 计算图片缩小后的长宽
             val width = Math.round(bitmap.width * BITMAP_SCALE)

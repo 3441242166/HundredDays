@@ -2,10 +2,12 @@ package com.example.administrator.hundreddays.sqlite
 
 import android.content.ContentValues
 import android.util.Log
+import com.example.administrator.hundreddays.bean.History
 import com.example.administrator.hundreddays.bean.Plan
 import com.example.administrator.hundreddays.bean.PlanIng
 import com.example.administrator.hundreddays.bean.Sign
 import com.example.administrator.hundreddays.constant.*
+import com.example.administrator.hundreddays.util.getSql
 
 class SignDao(val helper: MyDatabaseOpenHelper = MyDatabaseOpenHelper()) {
 
@@ -37,9 +39,11 @@ class SignDao(val helper: MyDatabaseOpenHelper = MyDatabaseOpenHelper()) {
         return count
     }
 
-    fun alter(): ArrayList<Sign> {
-        val sql = "select * from $TABLE_SIGN"
-        var list = arrayListOf<Sign>()
+    fun alter(vararg map:Pair<String,String>): List<Sign> {
+        //val sql = "select * from $TABLE_SIGN"
+        val sql = getSql(TABLE_SIGN, map.asList())
+        Log.i(TAG,"alter$sql")
+        val list = arrayListOf<Sign>()
 
         helper.use {
             val cursor = rawQuery(sql, null)
@@ -95,6 +99,27 @@ class SignDao(val helper: MyDatabaseOpenHelper = MyDatabaseOpenHelper()) {
         }
 
         return list
+    }
+
+    fun planSum(id:Long):Int{
+        val sql = "select * from $TABLE_SIGN where $DB_ID=$id"
+
+        var sum = 0
+        helper.use {
+            val cursor = rawQuery(sql, null)
+            if (cursor.moveToFirst()) {
+                while (true) {
+                    sum++
+                    if (cursor.isLast)
+                        break
+                    cursor.moveToNext()
+                }
+                cursor.close()
+            }
+        }
+
+        Log.i(TAG,"plan sum = $sum")
+        return sum
     }
 
 }

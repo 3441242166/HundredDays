@@ -1,24 +1,20 @@
 package com.example.administrator.hundreddays.util
 
-import android.content.Context
-import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Environment
 import com.example.administrator.hundreddays.base.BaseApplication
-import java.io.File
-import java.io.InputStream
-import java.io.OutputStream
 import android.provider.MediaStore
 import android.util.Log
-import java.io.IOException
+import java.io.*
 
 
 private val TAG = "FileConvertUtil"
 
 val PRIVATE_PATH = BaseApplication.context.getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString()
 
+val CREATE_PLAN = "${Environment.getExternalStorageDirectory()}/HundredDays/temp.jpg"
 
 /**
  * 向本地SD卡写网络图片
@@ -69,4 +65,48 @@ fun getPathFromUri(uri: Uri?):String{
 
 fun getBitmapFromUri(uri: Uri?): Bitmap? {
     return BitmapFactory.decodeFile(getPathFromUri(uri))
+}
+
+// 质量压缩法：
+fun compressImage(image: Bitmap?, name: String): String? {
+    val filepath = "$PRIVATE_PATH/$name"
+    try {
+        val baos = ByteArrayOutputStream()
+        image?.compress(Bitmap.CompressFormat.JPEG, 100, baos)//质量压缩方法，这里100表示不压缩，把压缩后的数据存放到baos中
+        var options = 100
+        while (baos.toByteArray().size / 1024 > 2000) {    //循环判断如果压缩后图片是否大于100kb,大于继续压缩
+            baos.reset()//重置baos即清空baos
+            options -= 20//每次都减少20
+            image?.compress(Bitmap.CompressFormat.JPEG, options, baos)//这里压缩options%，把压缩后的数据存放到baos中
+        }
+
+        //压缩好后写入文件中
+        val fos = FileOutputStream(filepath)
+        fos.write(baos.toByteArray())
+        fos.flush()
+        fos.close()
+        return filepath
+    } catch (e: IOException) {
+        e.printStackTrace()
+        return ""
+    }
+}
+
+// 质量压缩法：
+fun compressImage(image: Bitmap?): Bitmap? {
+    return try {
+        val baos = ByteArrayOutputStream()
+        image?.compress(Bitmap.CompressFormat.JPEG, 100, baos)//质量压缩方法，这里100表示不压缩，把压缩后的数据存放到baos中
+        var options = 100
+        while (baos.toByteArray().size / 1024 > 500) {    //循环判断如果压缩后图片是否大于100kb,大于继续压缩
+            baos.reset()//重置baos即清空baos
+            options -= 10//每次都减少10
+            image?.compress(Bitmap.CompressFormat.JPEG, options, baos)//这里压缩options%，把压缩后的数据存放到baos中
+
+        }
+        image
+    } catch (e: IOException) {
+        e.printStackTrace()
+        null
+    }
 }

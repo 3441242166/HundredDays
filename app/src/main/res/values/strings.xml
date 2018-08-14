@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">HundredDays</string>
+    <string name="title_activity_task">TaskActivity</string>
+    <string name="title_activity_statistic">StatisticActivity</string>
 </resources>

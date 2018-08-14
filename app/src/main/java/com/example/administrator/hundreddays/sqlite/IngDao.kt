@@ -23,23 +23,19 @@ class IngDao(private val helper: MyDatabaseOpenHelper = MyDatabaseOpenHelper()) 
             code = insert(TABLE_ING,null,cv)
 
         }
-
         return code
     }
 
     fun delete(id: Long?): Int {
         var count = 0
-
         helper.use {
             count = delete(TABLE_ING,"$DB_ID= $id",null)
         }
-
         return count
     }
 
 
     fun update(planIng: PlanIng){
-
         val cv = ContentValues()
         cv.put(DB_KEEP_DAY,planIng.insistentDay)
         cv.put(DB_LAST_DATE,planIng.lastSignDay)
@@ -50,33 +46,75 @@ class IngDao(private val helper: MyDatabaseOpenHelper = MyDatabaseOpenHelper()) 
 
     }
 
-
-    fun alter(type:Int): MutableList<PlanIng> {
+    fun alter(): MutableList<PlanIng> {
         val sql = "select * from $TABLE_ING"
         var list = mutableListOf<PlanIng>()
 
         helper.use {
             val cursor = rawQuery(sql, null)
             if (cursor.moveToFirst()) {
-
+                val planDao = PlanDao()
                 while (true) {
                     val planIng = PlanIng(cursor.getLong(0))
-
                     planIng.insistentDay = cursor.getInt(1)
                     planIng.lastSignDay = cursor.getString(2)
-
-                    planIng.plan = PlanDao().alterByID(planIng.id)
+                    planIng.plan = planDao.alterByID(planIng.id)
 
                     Log.i(TAG, planIng.toString())
 
                     list.add(planIng)
 
-                    if (cursor.isLast)
+                    if (cursor.isLast) {
                         break
-                    cursor.moveToNext()
-                }
+                    }else {
+                        cursor.moveToNext()
+                    }
 
+                }
                 cursor.close()
+
+            }
+        }
+
+        var index = list.size-1
+        while (index>=0){
+            val temp = list[index]
+            if(temp.lastSignDay == getNowDateString()){
+                temp.isFinish = true
+            }
+            index--
+        }
+
+        return list
+    }
+
+    fun alterByID(id: Long?): MutableList<PlanIng> {
+        val sql = "select * from $TABLE_ING where $DB_ID=$id"
+        var list = mutableListOf<PlanIng>()
+
+        helper.use {
+            val cursor = rawQuery(sql, null)
+            if (cursor.moveToFirst()) {
+                val planDao = PlanDao()
+                while (true) {
+                    val planIng = PlanIng(cursor.getLong(0))
+                    planIng.insistentDay = cursor.getInt(1)
+                    planIng.lastSignDay = cursor.getString(2)
+                    planIng.plan = planDao.alterByID(planIng.id)
+
+                    Log.i(TAG, planIng.toString())
+
+                    list.add(planIng)
+
+                    if (cursor.isLast) {
+                        break
+                    }else {
+                        cursor.moveToNext()
+                    }
+
+                }
+                cursor.close()
+
             }
         }
 
