@@ -5,6 +5,7 @@ import android.util.Log
 import com.example.administrator.hundreddays.bean.History
 import com.example.administrator.hundreddays.bean.Plan
 import com.example.administrator.hundreddays.constant.*
+import com.example.administrator.hundreddays.util.getSql
 
 class HistoryDao(val helper: MyDatabaseOpenHelper = MyDatabaseOpenHelper()) {
 
@@ -35,8 +36,8 @@ class HistoryDao(val helper: MyDatabaseOpenHelper = MyDatabaseOpenHelper()) {
         return count
     }
 
-    fun alter(): MutableList<History> {
-        val sql = "select * from $TABLE_HISTORY"
+    fun alter(vararg map:Pair<String,String>): MutableList<History> {
+        val sql = getSql(TABLE_HISTORY, map.asList())
         var list = mutableListOf<History>()
 
         helper.use {

@@ -1,5 +1,6 @@
 package com.example.administrator.hundreddays.adapter
 
+import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
@@ -14,5 +15,6 @@ class GridAdapter(data: MutableList<GridBean>?) : BaseQuickAdapter<GridBean, Bas
         Glide.with(BaseApplication.context)
                 .load(item.img)
                 .into(helper.getView(R.id.item_grid_image))
+
     }
 }

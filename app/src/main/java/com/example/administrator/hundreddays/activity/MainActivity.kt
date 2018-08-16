@@ -9,6 +9,9 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.bumptech.glide.request.RequestOptions
 import com.example.administrator.hundreddays.R
 import com.example.administrator.hundreddays.adapter.PlanAdapter
 import com.example.administrator.hundreddays.base.BaseActivity
@@ -139,7 +142,7 @@ class MainActivity : BaseActivity() , MainView,View.OnClickListener {
     }
 
     override fun setBackgroud(bitmap: Bitmap) {
-        bck.setImageBitmap(bitmap)
+        Glide.with(this).load(bitmap).transition(DrawableTransitionOptions().crossFade()).apply(RequestOptions()).into(bck)
     }
 
     override fun setMessageDialog(str: String) {

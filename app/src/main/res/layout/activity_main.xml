@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:background="@drawable/bck"
+        android:background="@color/mdtp_transparent_black"
         android:id="@+id/ac_main_bck"
         android:layout_width="0dp"
         android:layout_height="0dp"

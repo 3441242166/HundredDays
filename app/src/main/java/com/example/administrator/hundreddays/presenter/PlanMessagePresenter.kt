@@ -7,6 +7,7 @@ import com.example.administrator.hundreddays.sqlite.HistoryDao
 import com.example.administrator.hundreddays.sqlite.IngDao
 import com.example.administrator.hundreddays.sqlite.PlanDao
 import com.example.administrator.hundreddays.sqlite.SignDao
+import com.example.administrator.hundreddays.util.getNowDateString
 import com.example.administrator.hundreddays.view.PlanMessageView
 
 class PlanMessagePresenter(val context: Context,val view: PlanMessageView) {
@@ -22,7 +23,9 @@ class PlanMessagePresenter(val context: Context,val view: PlanMessageView) {
 
         val plan = planDao.alterByID(id)
         signList = signDao.alter(DB_ID to id.toString())
+        val history = historyDao.alter(DB_ID to id.toString())
 
+        view.returnMessage(plan,signList.size,history.isEmpty(),signList[signList.size-1].date== getNowDateString())
     }
 
 

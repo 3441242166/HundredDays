@@ -4,8 +4,6 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.view.animation.Transformation
 import com.bumptech.glide.Glide
-import com.bumptech.glide.RequestBuilder
-import com.bumptech.glide.request.RequestOptions.bitmapTransform
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.example.administrator.hundreddays.R

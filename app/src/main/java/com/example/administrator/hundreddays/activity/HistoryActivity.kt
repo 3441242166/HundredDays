@@ -79,34 +79,5 @@ class HistoryActivity : BaseActivity() , HistoryView {
         adapter.setNewData(data)
     }
 
-//    fun openSelectAvatarDialog(parentLayout:Int) {
-//        val view = LayoutInflater.from(this).inflate(R.layout.head_history, null)
-//        val popupWindow = getPopupWindow(view)
-//        //设置点击事件
-//        val cameraTextView = view.find<TextView>(R.id.dialog_cmera)
-//        val selectAvatar = view.find<TextView>(R.id.dialog_photo)
-//        cameraTextView.setOnClickListener {
-//            takeCamera()
-//            popupWindow.dismiss()
-//        }
-//
-//        selectAvatar.setOnClickListener {
-//            openGallery()
-//            popupWindow.dismiss()
-//        }
-//
-//        val parent = LayoutInflater.from(context).inflate(parentLayout, null)
-//    }
-
-    private fun getPopupWindow(view: View): PopupWindow {
-        val popupWindow = PopupWindow(this)
-        popupWindow.contentView = view
-        popupWindow.width = WindowManager.LayoutParams.MATCH_PARENT
-        popupWindow.height = WindowManager.LayoutParams.WRAP_CONTENT
-        popupWindow.setBackgroundDrawable(ColorDrawable(Color.WHITE))
-        popupWindow.isFocusable = true
-        popupWindow.isOutsideTouchable = true
-        return popupWindow
-    }
 
 }

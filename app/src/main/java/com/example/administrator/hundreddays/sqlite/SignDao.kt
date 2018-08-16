@@ -2,9 +2,6 @@ package com.example.administrator.hundreddays.sqlite
 
 import android.content.ContentValues
 import android.util.Log
-import com.example.administrator.hundreddays.bean.History
-import com.example.administrator.hundreddays.bean.Plan
-import com.example.administrator.hundreddays.bean.PlanIng
 import com.example.administrator.hundreddays.bean.Sign
 import com.example.administrator.hundreddays.constant.*
 import com.example.administrator.hundreddays.util.getSql
@@ -40,9 +37,8 @@ class SignDao(val helper: MyDatabaseOpenHelper = MyDatabaseOpenHelper()) {
     }
 
     fun alter(vararg map:Pair<String,String>): List<Sign> {
-        //val sql = "select * from $TABLE_SIGN"
         val sql = getSql(TABLE_SIGN, map.asList())
-        Log.i(TAG,"alter$sql")
+        Log.i(TAG,"alter  $sql")
         val list = arrayListOf<Sign>()
 
         helper.use {
@@ -51,8 +47,9 @@ class SignDao(val helper: MyDatabaseOpenHelper = MyDatabaseOpenHelper()) {
 
                 while (true) {
                     val plan = Sign(cursor.getLong(0))
-                    plan.message = cursor.getString(1)
-                    plan.date = cursor.getString(2)
+                    plan.date = cursor.getString(1)
+                    plan.message = cursor.getString(2)
+
 
                     Log.i(TAG, plan.toString())
 

@@ -16,9 +16,7 @@ class PlanAdapter(data: MutableList<PlanIng>?,val context: Context) : BaseQuickA
         helper.setText(R.id.item_plan_title, item.plan?.title)
         helper.setText(R.id.item_plan_keepday, item.insistentDay.toString())
         Glide.with(context)
-                .asBitmap()
                 .load(item.plan?.imgPath)
-                //.animate(R.anim.slide_in_left )
                 .into(helper.getView(R.id.item_plan_image))
 
         if(item.isFinish)
