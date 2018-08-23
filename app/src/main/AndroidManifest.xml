@@ -22,7 +22,7 @@
         <activity android:name=".activity.CreatePlanActivity" />
         <activity android:name=".activity.PlanMessageActivity" />
         <activity android:name=".activity.MenuActivity" />
-        <activity android:name=".activity.SignActivity" />
+        <activity android:name=".activity.SettingActivity" />
         <activity
             android:name=".activity.HistoryActivity"
             android:label="@string/title_activity_task"

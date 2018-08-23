@@ -1,56 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     tools:context=".activity.PlanMessageActivity">
-
-    <android.support.design.widget.AppBarLayout
+    <ImageView
         android:fitsSystemWindows="true"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <android.support.design.widget.CollapsingToolbarLayout
-            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
-            android:fitsSystemWindows="true"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <include
-                android:fitsSystemWindows="true"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layout_collapseMode="parallax"
-                app:layout_collapseParallaxMultiplier="0"
-                layout="@layout/head_plan_message"
-                />
-
-        </android.support.design.widget.CollapsingToolbarLayout>
-
-    </android.support.design.widget.AppBarLayout>
-
-    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/ac_message_blurbck"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:scaleType="centerCrop" />
+
+    <ImageView
+        android:fitsSystemWindows="true"
+        android:id="@+id/ac_message_bck"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop" />
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/ac_message_nested"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:fillViewport="true"
         android:fitsSystemWindows="true"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
+            android:id="@+id/ac_message_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/cardview_dark_background"
+            android:layout_height="match_parent"
             android:fitsSystemWindows="true"
             android:orientation="vertical">
 
+            <include
+                android:fitsSystemWindows="true"
+                layout="@layout/head_plan_message"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
             <com.example.administrator.myview.MyCalendar
+                android:id="@+id/ac_message_calendar"
+                android:fitsSystemWindows="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="50dp"></com.example.administrator.myview.MyCalendar>
+                android:layout_marginBottom="200dp"
+                android:layout_marginTop="50dp" />
 
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 
-</android.support.design.widget.CoordinatorLayout>
+</android.support.constraint.ConstraintLayout>

@@ -31,6 +31,7 @@
                 app:layout_collapseParallaxMultiplier="0" />
 
             <android.support.v7.widget.Toolbar
+                android:fitsSystemWindows="true"
                 android:id="@+id/ac_plan_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/toolbar_height"

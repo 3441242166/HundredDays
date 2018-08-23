@@ -30,3 +30,7 @@ const val DB_FREQUENT_DAY = "frequent_day"
 const val DB_MESSAGE = "message"
 const val DB_REMIND = "remind_time"
 //--------------------------------------------------------------------------------------------------
+const val PLAN_ING = "ing"
+const val PLAN_FAIL = "fail"
+const val PLAN_COMPLETE = "complete"
+const val PLAN_CANCEL = "cancel"

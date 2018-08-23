@@ -6,13 +6,13 @@ import com.example.administrator.hundreddays.R
 import com.example.administrator.hundreddays.base.BarBaseActivity
 import org.jetbrains.anko.find
 
-class SignActivity : BarBaseActivity() {
+class SettingActivity : BarBaseActivity() {
 
 
     lateinit var recyclerView: RecyclerView
 
     override val contentView: Int
-        get() = R.layout.activity_sign
+        get() = R.layout.activity_setting
 
     override fun init(savedInstanceState: Bundle?) {
         recyclerView = find(R.id.ac_sign_recycler)

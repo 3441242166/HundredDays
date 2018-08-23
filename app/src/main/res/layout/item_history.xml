@@ -4,11 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="120dp"
-    android:layout_marginLeft="20dp"
-    android:layout_marginRight="20dp"
-    android:layout_marginTop="12dp"
-    android:elevation="5dp"
-    app:cardCornerRadius="6dp">
+    android:layout_marginTop="3dp">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"

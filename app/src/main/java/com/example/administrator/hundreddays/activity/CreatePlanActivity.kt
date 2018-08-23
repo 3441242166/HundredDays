@@ -133,8 +133,7 @@ class CreatePlanActivity : BarBaseActivity() ,CreatePlanView {
     }
 
     fun packagePlan(){
-        val plan = Plan(null,txTitle.text.toString(),txRemind.text.toString(),"",getNowDateString(),frequentDay,planDays)
-        presenter.createPlan(plan,bitmap)
+        presenter.createPlan(txTitle.text.toString(),txRemind.text.toString(),frequentDay,planDays,bitmap)
     }
 
     override fun before() {
@@ -157,7 +156,7 @@ class CreatePlanActivity : BarBaseActivity() ,CreatePlanView {
     }
 
     override fun startIntent(intent: Intent, code: Int) {
-        val imageUri = Uri.fromFile(File(Environment.getExternalStorageDirectory(), "image.jpg"))
+        //val imageUri = Uri.fromFile(File(Environment.getExternalStorageDirectory(), "image.jpg"))
         //指定照片保存路径（SD卡），image.jpg为一个临时文件，每次拍照后这个图片都会被替换
         startActivityForResult(intent,code)
     }
@@ -166,7 +165,7 @@ class CreatePlanActivity : BarBaseActivity() ,CreatePlanView {
         when (requestCode) {
             CAMERA_CODE ->{
                 //获得拍的照片
-                bitmap = data!!.extras.getParcelable("data") as Bitmap
+                bitmap = data?.extras?.getParcelable("data") as Bitmap
                // bitmap = getBitmapFromLocal(com.example.administrator.hundreddays.util.CREATE_PLAN)
                 Glide.with(this).load(bitmap).into(img)
             }

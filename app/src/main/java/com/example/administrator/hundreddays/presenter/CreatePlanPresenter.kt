@@ -5,10 +5,8 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.net.Uri
 import android.provider.MediaStore
 import android.text.TextUtils
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -16,45 +14,54 @@ import android.view.WindowManager
 import android.widget.PopupWindow
 import android.widget.TextView
 import com.example.administrator.hundreddays.R
+import com.example.administrator.hundreddays.bean.History
 import com.example.administrator.hundreddays.bean.Plan
-import com.example.administrator.hundreddays.bean.PlanIng
 import com.example.administrator.hundreddays.constant.CAMERA_CODE
 import com.example.administrator.hundreddays.constant.GALLERY_CODE
-import com.example.administrator.hundreddays.sqlite.IngDao
-import com.example.administrator.hundreddays.sqlite.PlanDao
+import com.example.administrator.hundreddays.constant.PLAN_ING
 import com.example.administrator.hundreddays.util.*
 import com.example.administrator.hundreddays.view.CreatePlanView
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import io.realm.Realm
 import org.jetbrains.anko.find
-import java.io.File
+import java.util.*
 
-class CreatePlanPresenter(val view: CreatePlanView, private val context: Context) {
+class CreatePlanPresenter(val view: CreatePlanView, private val context: Context,val realm: Realm? = Realm.getDefaultInstance()) {
     private val TAG = "CreatePlanPresenter"
 
-    fun createPlan(plan: Plan,bitmap: Bitmap?){
-        if (TextUtils.isEmpty(plan.title)) {
+    fun createPlan(title:String,reminTime:String,frequent:Int,targetDay:Int,bitmap: Bitmap?){
+        if (TextUtils.isEmpty(title)) {
             view.failure(Throwable("标题不能为空"))
+            return
+        }
+        if (bitmap == null) {
+            view.failure(Throwable("请选择图片"))
             return
         }
 
         view.before()
 
-        Observable.create<Long> {
-            plan.imgPath = compressImage(bitmap, getNowDateTimeString())!!
-            val index: Long = PlanDao().insert(plan)
-            Log.i(TAG,getAddDayString(getNowDateString(),-1))
-            IngDao().insert(PlanIng(index, getAddDayString(getNowDateString(),-1)))
 
-            it.onNext(0)
-        }
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    view.after()
-                    view.success("创建成功")
-                }
+            realm?.beginTransaction()
+            val plan = realm?.createObject(Plan::class.java,UUID.randomUUID().toString())
+            plan?.imgPath = compressImage(bitmap, getNowString(DATETYPE.DATE_TIME))!!
+            plan?.title = title
+            plan?.createDateTime = getNowString(DATETYPE.DATE_TIME)
+            plan?.remindTime = reminTime
+            plan?.targetDay = targetDay
+            plan?.frequentDay = frequent
+            val history = realm?.createObject(History::class.java,UUID.randomUUID().toString())
+            history?.plan = plan
+            history?.keepDay = 0
+            history?.state = PLAN_ING
+            history?.lastSignDate = getAddDayString(getNowString(DATETYPE.DATE_DATE),-1)
+            realm?.commitTransaction()
+
+        view.after()
+        view.success("创建成功")
+
     }
 
     fun openSelectAvatarDialog(parentLayout:Int) {

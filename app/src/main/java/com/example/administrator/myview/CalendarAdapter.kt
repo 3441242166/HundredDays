@@ -13,12 +13,17 @@ import de.hdodenhof.circleimageview.CircleImageView
 import org.jetbrains.anko.textColor
 import java.util.*
 
-class CalendarAdapter(data: ArrayList<CalendarBean>?) : BaseQuickAdapter<CalendarBean, BaseViewHolder>(R.layout.item_calendar, data) {
+class CalendarAdapter(data: ArrayList<CalendarBean>?,val nowCalendar: Calendar) : BaseQuickAdapter<CalendarBean, BaseViewHolder>(R.layout.item_calendar, data) {
     private val TAG = "CalendarAdapter"
 
+    private val now = Calendar.getInstance()
+
     override fun convert(helper: BaseViewHolder, item: CalendarBean) {
-        helper.setText(R.id.item_calendar_day, item.date.date.toString())
-        val date = item.date
+        val startTime = System.currentTimeMillis()
+        val calendar = item.calendar
+        helper.setText(R.id.item_calendar_day, calendar.get(Calendar.DAY_OF_MONTH).toString())
+
+        helper.adapterPosition
 
         if(item.isSign){
             helper.getView<ConstraintLayout>(R.id.item_calendar_bck).setBackgroundColor(Color.rgb(103, 182, 94))
@@ -26,16 +31,16 @@ class CalendarAdapter(data: ArrayList<CalendarBean>?) : BaseQuickAdapter<Calenda
             helper.getView<ConstraintLayout>(R.id.item_calendar_bck).setBackgroundColor(Color.rgb(233, 233, 233))
         }
 
-        val now =  Date()
-        if( now.year == date.year){
-            if(now.month == date.month){
-                if(now.date == date.date){
-                    helper.getView<CircleImageView>(R.id.item_calendar_now).visibility = View.VISIBLE
-                }
-            }else{
-                helper.getView<TextView>(R.id.item_calendar_day).setTextColor(Color.rgb(199, 199, 199))
-            }
+        if(nowCalendar.get(Calendar.YEAR)==calendar.get(Calendar.YEAR) && nowCalendar.get(Calendar.MONTH)==calendar.get(Calendar.MONTH)){
+            helper.getView<TextView>(R.id.item_calendar_day).setTextColor(android.graphics.Color.rgb(0, 0, 0))
         }
 
+        if(now.get(Calendar.YEAR)==calendar.get(Calendar.YEAR) &&now.get(Calendar.DAY_OF_YEAR)==calendar.get(Calendar.DAY_OF_YEAR)) {
+            helper.getView<CircleImageView>(R.id.item_calendar_now).visibility = View.VISIBLE
+        }
+
+        val endTime = System.currentTimeMillis()
+        Log.i(TAG,"time = ${endTime - startTime}")
     }
+
 }

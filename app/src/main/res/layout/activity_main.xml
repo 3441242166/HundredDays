@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:background="@color/mdtp_transparent_black"
+        android:background="@color/pureBlack"
         android:id="@+id/ac_main_bck"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -16,6 +16,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/bck"
         app:layout_constraintVertical_bias="0.0" />
 
     <com.joaquimley.faboptions.FabOptions

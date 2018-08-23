@@ -1,6 +1,13 @@
 package com.example.administrator.hundreddays.bean
 
-data class History(var id:Long?, var keepDay:Int, var isFinish:Int, var plan: Plan?) {
-    constructor(id: Long?) : this(id, 0,0, null)
-}
+import io.realm.RealmObject
+import io.realm.annotations.PrimaryKey
 
+open class History(@PrimaryKey var id:String?,
+                   var keepDay:Int,
+                   var lastSignDate:String,
+                   var state:String,
+                   var plan: Plan?): RealmObject() {
+    constructor() : this(null, 0,"", "",null)
+
+}

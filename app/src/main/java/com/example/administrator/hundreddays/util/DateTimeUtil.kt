@@ -1,5 +1,6 @@
 package com.example.administrator.hundreddays.util
 
+import android.annotation.SuppressLint
 import android.util.Log
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -7,38 +8,30 @@ import java.util.*
 
 private val TAG = "DateUtil"
 
-fun getNowDateTimeString(): String {
+enum class DATETYPE(val str:String){
+    DATE_TIME("yyyy-MM-dd HH:mm:ss"),
+    DATE_DATE("yyyy-MM-dd"),
+    DATE_MONTH("yyyy-MM"),
+    TIME("HH:mm:ss"),
+}
+
+fun getNowString(type:DATETYPE = DATETYPE.DATE_TIME):String{
     val currentTime = Date()
-    val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+    val formatter = SimpleDateFormat(type.str)
     val dateString = formatter.format(currentTime)
     Log.i(TAG, "getNowDateTimeString    $dateString")
     return dateString
 }
 
-fun getNowDateString(): String {
-    val currentTime = Date()
-    val formatter = SimpleDateFormat("yyyy-MM-dd")
-    val dateString = formatter.format(currentTime)
+fun getDateString(date:Date,type: DATETYPE = DATETYPE.DATE_TIME): String {
+    val formatter = SimpleDateFormat(type.str)
+    val dateString = formatter.format(date)
     Log.i(TAG, dateString)
     return dateString
 }
 
-//    public static String getStringByDateTime(Date date){
-//        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
-//        Log.i(TAG, "getStringByDateTime: dateString " +formatter.format(date));
-//        return formatter.format(date);
-//    }
-
-fun getNowTimeString(): String {
-    val currentTime = Date()
-    val formatter = SimpleDateFormat("HH:mm:ss")
-    val dateString = formatter.format(currentTime)
-    Log.i(TAG, dateString)
-    return dateString
-}
-
-fun getTimeString(dateTime: String): String {
-    val formatter = SimpleDateFormat("HH:mm:ss")
+fun getDateString(dateTime: String,type: DATETYPE = DATETYPE.DATE_TIME): String {
+    val formatter = SimpleDateFormat(type.str)
     var date = Date()
     try {
         date = formatter.parse(dateTime)
@@ -48,20 +41,6 @@ fun getTimeString(dateTime: String): String {
 
     val dateString = formatter.format(date)
     Log.i(TAG, "getNowTimeString    $dateString")
-    return dateString
-}
-
-fun getDateString(dateTime: String): String {
-    val formatter = SimpleDateFormat("yyyy-MM-dd")
-    var date = Date()
-    try {
-        date = formatter.parse(dateTime)
-    } catch (e: ParseException) {
-        e.printStackTrace()
-    }
-
-    val dateString = formatter.format(date)
-    Log.i(TAG, "getNowDateString    $dateString")
     return dateString
 }
 
@@ -103,38 +82,6 @@ fun getDateByDateString(date: String): Date {
     return mDate
 }
 
-fun getTimeByDateString(date: String): Date {
-    var mDate = Date()
-    val format = SimpleDateFormat("HH:mm:ss", Locale.CHINA)
-    try {
-        mDate = format.parse(date)
-    } catch (e: ParseException) {
-        e.printStackTrace()
-    }
-
-    return mDate
-}
-
-/*    date_1 大 返回 1 --- date_1 小 返回 -1 ---else 返回 0 */
-fun compareStringByDate(date_1: String, date_2: String): Int {
-    val df = SimpleDateFormat("yyyy-MM-dd")
-    try {
-        val dt1 = df.parse(date_1)
-        val dt2 = df.parse(date_2)
-        return if (dt1.time > dt2.time) {
-            1
-        } else if (dt1.time < dt2.time) {
-            -1
-        } else {
-            0
-        }
-    } catch (exception: Exception) {
-        exception.printStackTrace()
-    }
-
-    return 0
-}
-
 fun differentDay(bdate: String, smdate: String): Int {
 
     val sdf = SimpleDateFormat("yyyy-MM-dd")
@@ -169,31 +116,13 @@ fun getTimeLongByString(time: String): Long {
     val st = StringTokenizer(time, ":")
     while (st.hasMoreElements()) {
         val temp = st.nextToken()
-        if (x == 0) {
-            sum += (Integer.valueOf(temp) * 1000 * 3600).toLong()
-        } else if (x == 1) {
-            sum += (Integer.valueOf(temp) * 1000 * 60).toLong()
-        } else {
-            sum += (Integer.valueOf(temp) * 1000).toLong()
+        sum += when (x) {
+            0 -> (Integer.valueOf(temp) * 1000 * 3600).toLong()
+            1 -> (Integer.valueOf(temp) * 1000 * 60).toLong()
+            else -> (Integer.valueOf(temp) * 1000).toLong()
         }
         x++
     }
     return sum
 }
 
-fun getTimeByLong(num: Long): String {
-    val date = Date(num)
-    var h = "" + num / 1000 / 60 / 60
-    if (h.length < 2) {
-        h = "0$h"
-    }
-    var m = "" + num / 1000 / 60 % 60
-    if (m.length < 2) {
-        m = "0$m"
-    }
-    var s = "" + num / 1000 % 60
-    if (s.length < 2) {
-        s = "0$s"
-    }
-    return "$h:$m:$s"
-}

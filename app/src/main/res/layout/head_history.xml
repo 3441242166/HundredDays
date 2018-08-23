@@ -4,9 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:fitsSystemWindows="true"
     android:orientation="horizontal">
 
     <Spinner
+        android:fitsSystemWindows="true"
         android:layout_weight="1"
         android:id="@+id/ac_spinner_1"
         android:layout_width="0dp"
@@ -19,6 +21,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Spinner
+        android:fitsSystemWindows="true"
         android:id="@+id/ac_spinner_2"
         android:layout_width="0dp"
         android:layout_height="36dp"
@@ -33,6 +36,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Spinner
+        android:fitsSystemWindows="true"
         android:layout_weight="1"
         android:id="@+id/ac_spinner_3"
         android:layout_width="0dp"

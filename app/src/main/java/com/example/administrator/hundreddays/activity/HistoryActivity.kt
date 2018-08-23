@@ -17,11 +17,13 @@ import com.example.administrator.hundreddays.R
 import com.example.administrator.hundreddays.adapter.HistoryAdapter
 import com.example.administrator.hundreddays.base.BaseActivity
 import com.example.administrator.hundreddays.bean.History
+import com.example.administrator.hundreddays.constant.DATA
 import com.example.administrator.hundreddays.presenter.HistoryPresenter
 import com.example.administrator.hundreddays.view.HistoryView
 
 import kotlinx.android.synthetic.main.activity_history.*
 import org.jetbrains.anko.find
+import org.jetbrains.anko.startActivity
 
 class HistoryActivity : BaseActivity() , HistoryView {
     private val TAG = "HistoryActivity"
@@ -61,6 +63,11 @@ class HistoryActivity : BaseActivity() , HistoryView {
                 ac_history_spinner.alpha = ((1 - offset / total).toFloat())
             }
         }
+
+        adapter.setOnItemClickListener { _, _, position ->
+            startActivity<PlanMessageActivity>(DATA to adapter.data[position].id)
+        }
+
     }
 
     private fun initView() {

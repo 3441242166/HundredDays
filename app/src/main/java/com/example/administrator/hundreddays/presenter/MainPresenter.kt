@@ -7,90 +7,81 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.example.administrator.hundreddays.bean.History
-import com.example.administrator.hundreddays.bean.PlanIng
 import com.example.administrator.hundreddays.bean.Sign
-import com.example.administrator.hundreddays.sqlite.HistoryDao
-import com.example.administrator.hundreddays.sqlite.IngDao
-import com.example.administrator.hundreddays.sqlite.SignDao
+import com.example.administrator.hundreddays.constant.PLAN_COMPLETE
+import com.example.administrator.hundreddays.constant.PLAN_FAIL
+import com.example.administrator.hundreddays.constant.PLAN_ING
+import com.example.administrator.hundreddays.util.DATETYPE
 import com.example.administrator.hundreddays.util.blurImageView
 import com.example.administrator.hundreddays.util.differentDay
-import com.example.administrator.hundreddays.util.getNowDateString
+import com.example.administrator.hundreddays.util.getNowString
 import com.example.administrator.hundreddays.view.*
+import io.realm.Realm
+import java.util.*
 
-class MainPresenter(val view: MainView, private val context: Context) {
+
+class MainPresenter(val view: MainView, private val context: Context,val realm: Realm? = Realm.getDefaultInstance()) {
     private val TAG = "MainPresenter"
 
-    private val signDao = SignDao()
-    private val ingDao = IngDao()
-    private val historyDao = HistoryDao()
-
-    lateinit var planList:MutableList<PlanIng>
+    lateinit var planList:MutableList<History>
 
     var position = 0
 
     fun initData(){
-        val list = ingDao.alter()
+        var sum = 0
 
-        var sum = 0     //统计过期任务数
+        realm?.beginTransaction()
+        val userList = realm?.where(History::class.java)
+                ?.equalTo("state", PLAN_ING)
+                ?.findAll()
+        planList = userList!!.toMutableList()
 
-        var index = list.size-1
-        while (index>-1){
-            val temp = list[index]
-            // Log.i(TAG," 1 ${getNowDateString()}  2 ${temp.lastSignDay} 3 ${temp.plan?.frequentDay}")
+        sum = checkInvalid()
 
-            if(differentDay(getNowDateString(),temp.lastSignDay) > temp.plan?.frequentDay!!){
-                //如果过期 从ING表删除  然后加入HISTORY表
-                ingDao.delete(temp.id)
-
-                addHistory(History(temp.id,signDao.alter(temp.id!!).size,0,null))
-                Log.i(TAG,"任务过期")
-                list.removeAt(index)
-                sum++
-            }
-
-            index--
-        }
-
-        if(list.size == 0){
+        if(planList.size == 0){
             view.setVisibility(false)
         }else {
             view.setVisibility(true)
-            planList = list
-            view.setData(list)
+            view.setData(planList)
             changeIndex(position,true)
         }
-
+        realm?.commitTransaction()
         if(sum > 0){
             view.setMessageDialog("你有$sum 个任务过期了,快去回收站看看吧")
         }
     }
 
     fun sign(pos:Int,message:String) {
-        val planIng = planList[pos]
-        //------------------------------------------
-        if(planIng.isFinish){
+        Log.i(TAG,"sign")
+        val temp = planList[pos]
+        if(temp.lastSignDate == getNowString(DATETYPE.DATE_DATE)){
             view.setMessageDialog("已经签到过了哦")
             return
         }
+        //------------------------------------------------------------------------------------------
+        realm?.beginTransaction()
 
-        planIng.insistentDay+=1
-        planIng.lastSignDay = getNowDateString()
-        planIng.isFinish = true
+        val history = realm?.where(History::class.java)
+                ?.endsWith("id",temp.id)
+                ?.findFirst()
 
-        // 如果 达到目标天数
-        if(differentDay(getNowDateString(), planIng.plan!!.createDateTime) >= planIng.plan!!.targetDay){
-            Log.i(TAG,"达到目标天数")
-            addHistory(History(planIng.id,signDao.planSum(planIng.id!!),1,null))
-            ingDao.delete(planIng.id)
-        }else{
-            ingDao.update(planIng)
+        if(differentDay(getNowString(DATETYPE.DATE_DATE), history!!.plan!!.createDateTime) >= history.plan!!.targetDay){
+            history.state = PLAN_COMPLETE
         }
-        signDao.insert(Sign(planIng.id,message, getNowDateString(),null))
-        view.signSuccess(pos)
-    }
+        history.keepDay = history.keepDay++
+        history.lastSignDate = getNowString(DATETYPE.DATE_DATE)
+        temp.keepDay++
+        temp.lastSignDate = getNowString(DATETYPE.DATE_DATE)
 
-    private fun addHistory(history: History){
-        historyDao.insert(history)
+        val sign = realm?.createObject(Sign::class.java,UUID.randomUUID().toString())
+        sign?.message = message
+        sign?.date = getNowString(DATETYPE.DATE_DATE)
+        sign?.plan = history.plan
+
+        realm?.commitTransaction()
+        //------------------------------------------------------------------------------------------
+
+        view.signSuccess(pos)
     }
 
     private val target =object :  SimpleTarget<Bitmap>(500,700){
@@ -98,7 +89,6 @@ class MainPresenter(val view: MainView, private val context: Context) {
             view.setBackgroud(blurImageView(context,resource,3f)!!)
         }
     }
-
     private fun getBlurBitmap(path: String?){
         Glide
                 .with(context) // could be an issue!
@@ -114,6 +104,30 @@ class MainPresenter(val view: MainView, private val context: Context) {
         position = index
         view.setMessage(planList[index].plan!!.title, "${index+1}/${planList.size}")
         getBlurBitmap(planList[index].plan!!.imgPath)
+    }
+
+    private fun checkInvalid():Int{
+        var sum = 0
+        var index = planList.size-1
+        while (index>-1){
+            val temp = planList[index]
+            // Log.i(TAG," 1 ${getNowDateString()}  2 ${temp.lastSignDay} 3 ${temp.plan?.frequentDay}")
+            if(differentDay(getNowString(DATETYPE.DATE_DATE),temp.lastSignDate) > temp.plan?.frequentDay!!){
+                //如果过期
+                val temp = realm
+                        ?.where(History::class.java)
+                        ?.equalTo("id",planList[index].id)
+                        ?.findAll()
+                temp!![0].state = PLAN_FAIL
+
+                planList.removeAt(index)
+                sum++
+            }
+
+            index--
+        }
+
+        return sum
     }
 
 }

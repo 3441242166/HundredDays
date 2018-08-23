@@ -6,20 +6,21 @@ import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.LinearSnapHelper
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import com.afollestad.materialdialogs.MaterialDialog
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.example.administrator.hundreddays.R
 import com.example.administrator.hundreddays.adapter.PlanAdapter
 import com.example.administrator.hundreddays.base.BaseActivity
-import com.example.administrator.hundreddays.bean.PlanIng
+import com.example.administrator.hundreddays.bean.History
 import com.example.administrator.hundreddays.constant.CREATE_SUCCESS
 import com.example.administrator.hundreddays.constant.DATA
 import com.example.administrator.hundreddays.presenter.MainPresenter
-import com.example.administrator.hundreddays.sqlite.SignDao
 import com.example.administrator.hundreddays.util.PagingScrollHelper
 import com.example.administrator.hundreddays.view.MainView
 import com.joaquimley.faboptions.FabOptions
@@ -28,6 +29,7 @@ import org.jetbrains.anko.alert
 import org.jetbrains.anko.startActivity
 import com.example.administrator.hundreddays.constant.CREATE_PLAN
 import com.example.administrator.hundreddays.constant.PLAN_LIST
+import org.jetbrains.anko.toast
 
 
 class MainActivity : BaseActivity() , MainView,View.OnClickListener {
@@ -59,7 +61,11 @@ class MainActivity : BaseActivity() , MainView,View.OnClickListener {
         }
 
         adapter.setOnItemChildClickListener { _, _, position ->
-            mainPresenter.sign(position,"")
+            toast("sign")
+            MaterialDialog.Builder(this).title("测试")
+                    .input("输入一些东西把","测试") { _, input ->
+                        mainPresenter.sign(position,input.toString())
+                    }.show()
         }
 
         scrollHelper.setOnPageChangeListener(object : PagingScrollHelper.onPageChangeListener {
@@ -69,7 +75,7 @@ class MainActivity : BaseActivity() , MainView,View.OnClickListener {
         })
 
         title.setOnClickListener{ alert("你好","标题"){
-            positiveButton("yes") { SignDao().alter() }
+            positiveButton("yes") {}
             negativeButton("no"){}
         }.show()}
 
@@ -108,7 +114,7 @@ class MainActivity : BaseActivity() , MainView,View.OnClickListener {
                 ),PLAN_LIST)
             }
             R.id.fab_list -> {
-                startActivity<SignActivity>()
+                startActivity<SettingActivity>()
             }
             R.id.fab_other -> {
                 startActivity<StatisticActivity>()
@@ -132,7 +138,7 @@ class MainActivity : BaseActivity() , MainView,View.OnClickListener {
         }
     }
 
-    override fun setData(data: MutableList<PlanIng>) {
+    override fun setData(data: MutableList<History>) {
         adapter.setNewData(data)
     }
 

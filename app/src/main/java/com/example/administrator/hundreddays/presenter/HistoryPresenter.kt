@@ -2,26 +2,23 @@ package com.example.administrator.hundreddays.presenter
 
 import android.content.Context
 import com.example.administrator.hundreddays.bean.History
-import com.example.administrator.hundreddays.bean.Plan
-import com.example.administrator.hundreddays.sqlite.HistoryDao
-import com.example.administrator.hundreddays.util.getNowDateTimeString
-import com.example.administrator.hundreddays.util.getNowTimeString
 import com.example.administrator.hundreddays.view.HistoryView
+import io.realm.Realm
 
-class HistoryPresenter(val view: HistoryView, val context: Context) {
+class HistoryPresenter(val view: HistoryView, val context: Context,val realm: Realm? = Realm.getDefaultInstance()) {
 
-    val historyDao  = HistoryDao()
+    lateinit var planList:MutableList<History>
 
     fun initData(){
-        val list = historyDao.alter()
-//        val data: MutableList<History> = mutableListOf()
-//        for(pos in 1..10){
-//            val plan = Plan(null,"666$pos", getNowTimeString(),"", getNowDateTimeString(),10,100)
-//            val history = History(null,pos,plan)
-//            data.add(history)
-//        }
+        realm?.beginTransaction()
 
-        view.setData(list)
+        val userList = realm?.where(History::class.java)
+                ?.findAll()
+        planList = userList!!.toMutableList()
+
+        realm?.commitTransaction()
+
+        view.setData(planList)
     }
 
 }
