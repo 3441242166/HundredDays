@@ -1,13 +1,20 @@
 package com.example.administrator.hundreddays.activity
 
+import android.animation.AnimatorInflater
+import android.app.ActivityOptions
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
+import android.os.Handler
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.LinearSnapHelper
 import android.support.v7.widget.RecyclerView
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import android.view.animation.AlphaAnimation
+import android.view.animation.AnimationSet
 import android.widget.ImageView
 import android.widget.TextView
 import com.afollestad.materialdialogs.MaterialDialog
@@ -30,7 +37,6 @@ import org.jetbrains.anko.startActivity
 import com.example.administrator.hundreddays.constant.CREATE_PLAN
 import com.example.administrator.hundreddays.constant.PLAN_LIST
 import org.jetbrains.anko.toast
-
 
 class MainActivity : BaseActivity() , MainView,View.OnClickListener {
     private val TAG = "MainActivity"
@@ -56,8 +62,12 @@ class MainActivity : BaseActivity() , MainView,View.OnClickListener {
     private fun initEvent() {
         fab.setOnClickListener(this)
 
-        adapter.setOnItemClickListener { _, _, position ->
-            startActivity<PlanMessageActivity>(DATA to adapter.data[position].id)
+        adapter.setOnItemClickListener { _, view, position ->
+              startActivity<PlanMessageActivity>(DATA to adapter.data[position].id)
+//            val intent = Intent(this, PlanMessageActivity::class.java)
+//            val bundle = ActivityOptions.makeSceneTransitionAnimation(this,view.find(R.id.item_plan_image),"bck").toBundle()
+//            intent.putExtra(DATA,adapter.data[position].id)
+//            startActivity(intent,bundle)
         }
 
         adapter.setOnItemChildClickListener { _, _, position ->
@@ -74,10 +84,33 @@ class MainActivity : BaseActivity() , MainView,View.OnClickListener {
             }
         })
 
-        title.setOnClickListener{ alert("你好","标题"){
+        title.setOnClickListener{
+            //title.animate().translationX(50f)
+
+            alert("你好","标题"){
             positiveButton("yes") {}
             negativeButton("no"){}
         }.show()}
+
+        title.addTextChangedListener(object :TextWatcher{
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                Log.i(TAG,"s =$s  start=$start before=$before count=$count")
+//                val animationSet = AnimationSet(true)
+//                val alphaAnimation1 = AlphaAnimation(0f, 1f)
+//                alphaAnimation1.duration = 200
+//                animationSet.addAnimation(alphaAnimation1)
+//                title.startAnimation(animationSet)
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+
+        })
 
     }
 
@@ -89,15 +122,14 @@ class MainActivity : BaseActivity() , MainView,View.OnClickListener {
         fab = find(R.id.ac_main_menu)
 
         recycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        LinearSnapHelper().attachToRecyclerView(recycler)
+        //LinearSnapHelper().attachToRecyclerView(recycler)
         recycler.adapter = adapter
         scrollHelper.setUpRecycleView(recycler)
 
         fab.setFabColor(R.color.fabColor)
-        fab.setBackgroundColor(this,0x7e00b7ff)
+        fab.setBackgroundColor(this,0x00000000)
 
     }
-
 
     override fun onClick(v: View?) {
         when (v?.id) {
@@ -114,10 +146,10 @@ class MainActivity : BaseActivity() , MainView,View.OnClickListener {
                 ),PLAN_LIST)
             }
             R.id.fab_list -> {
-                startActivity<SettingActivity>()
+                startActivity<StatisticActivity>()
             }
             R.id.fab_other -> {
-                startActivity<StatisticActivity>()
+                startActivity<SettingActivity>()
             }
         }
     }
@@ -143,12 +175,24 @@ class MainActivity : BaseActivity() , MainView,View.OnClickListener {
     }
 
     override fun setMessage(title:String, index:String) {
+
+        val animation = AnimatorInflater.loadAnimator(this,R.animator.slide_in_left)
+        animation.setTarget(title)
+        animation.start()
+
         this.title.text = title
         indicate.text = index
     }
 
-    override fun setBackgroud(bitmap: Bitmap) {
-        Glide.with(this).load(bitmap).transition(DrawableTransitionOptions().crossFade()).apply(RequestOptions()).into(bck)
+    override fun setBackground(path: String) {
+//        Glide.with(this)
+//                .load(bitmap)
+//                .transition(DrawableTransitionOptions()
+//                        .crossFade())
+//                .apply(RequestOptions()).into(bck)
+        Glide.with(this)
+                .load(path)
+                .apply(RequestOptions()).into(bck)
     }
 
     override fun setMessageDialog(str: String) {

@@ -16,7 +16,7 @@ import android.graphics.Bitmap
     /**
      * 图片缩放比例
      */
-    private val BITMAP_SCALE = 0.2f
+    private const val BITMAP_SCALE = 0.2f
 
     /**
      * 将Drawable对象转化为Bitmap对象
@@ -25,7 +25,6 @@ import android.graphics.Bitmap
      * @return 对应的Bitmap对象
      */
     private fun drawableToBitmap(drawable: Drawable): Bitmap {
-
         //如果本身就是BitmapDrawable类型 直接转换即可
         if (drawable is BitmapDrawable) {
             return drawable.bitmap
@@ -55,18 +54,13 @@ import android.graphics.Bitmap
      * @param img     ImageView
      * @param level   模糊等级【0 ~ 25之间】
      */
-    fun blurImageView(context: Context, img: ImageView, level: Float) {
+    fun blurBitmap(context: Context, img: ImageView, level: Float) {
         // 将图片处理成模糊
         val bitmap = blurBitmap(context,Bitmap.createBitmap(img.drawingCache), level)
         img.setImageBitmap(bitmap)
     }
 
-    fun blurImageView(context: Context, img: Bitmap, level: Float): Bitmap? {
-        // 将图片处理成模糊
-        return blurBitmap(context,img, level)
-    }
-
-    fun blurImageView(context: Context, imgUrl: String?, level: Float): Bitmap? {
+    fun blurBitmap(context: Context, imgUrl: String?, level: Float): Bitmap? {
         // 将图片处理成模糊
         return blurBitmap(context,Bitmap.createBitmap(getBitmapFromLocal(imgUrl)), level)
     }
@@ -79,7 +73,7 @@ import android.graphics.Bitmap
      * @param level   模糊等级【0 ~ 25之间】
      * @param color   为ImageView蒙上一层颜色
      */
-    fun blurImageView(context: Context, img: ImageView, level: Float, color: Int) {
+    fun blurBitmap(context: Context, img: ImageView, level: Float, color: Int) {
         // 将图片处理成模糊
         val bitmap = blurBitmap(context, drawableToBitmap(img.drawable), level)
         if (bitmap != null) {
@@ -107,7 +101,6 @@ import android.graphics.Bitmap
         Canvas(bitmap).drawRoundRect(rect, 0f, 0f, paint)
         return BitmapDrawable(context.resources, bitmap)
     }
-
 
     /**
      * 模糊图片的具体方法

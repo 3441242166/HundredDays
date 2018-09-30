@@ -11,10 +11,7 @@ import com.example.administrator.hundreddays.bean.Sign
 import com.example.administrator.hundreddays.constant.PLAN_COMPLETE
 import com.example.administrator.hundreddays.constant.PLAN_FAIL
 import com.example.administrator.hundreddays.constant.PLAN_ING
-import com.example.administrator.hundreddays.util.DATETYPE
-import com.example.administrator.hundreddays.util.blurImageView
-import com.example.administrator.hundreddays.util.differentDay
-import com.example.administrator.hundreddays.util.getNowString
+import com.example.administrator.hundreddays.util.*
 import com.example.administrator.hundreddays.view.*
 import io.realm.Realm
 import java.util.*
@@ -28,7 +25,7 @@ class MainPresenter(val view: MainView, private val context: Context,val realm: 
     var position = 0
 
     fun initData(){
-        var sum = 0
+        var sum: Int
 
         realm?.beginTransaction()
         val userList = realm?.where(History::class.java)
@@ -84,26 +81,13 @@ class MainPresenter(val view: MainView, private val context: Context,val realm: 
         view.signSuccess(pos)
     }
 
-    private val target =object :  SimpleTarget<Bitmap>(500,700){
-        override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-            view.setBackgroud(blurImageView(context,resource,3f)!!)
-        }
-    }
-    private fun getBlurBitmap(path: String?){
-        Glide
-                .with(context) // could be an issue!
-                .asBitmap()
-                .load(path)
-                .into(target)
-    }
-
     fun changeIndex(index:Int,isUpdate:Boolean = false){
         if(position == index && !isUpdate){
             return
         }
         position = index
         view.setMessage(planList[index].plan!!.title, "${index+1}/${planList.size}")
-        getBlurBitmap(planList[index].plan!!.imgPath)
+        view.setBackground(getBlurPath(planList[index].plan!!.imgPath))
     }
 
     private fun checkInvalid():Int{

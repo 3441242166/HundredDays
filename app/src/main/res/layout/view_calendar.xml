@@ -112,6 +112,7 @@
         </LinearLayout>
 
         <android.support.v7.widget.RecyclerView
+            android:overScrollMode="never"
             android:id="@+id/view_calendar_recycler"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

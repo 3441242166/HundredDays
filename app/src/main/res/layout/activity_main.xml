@@ -20,40 +20,41 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <com.joaquimley.faboptions.FabOptions
-        app:button_menu="@menu/main_menu"
         android:id="@+id/ac_main_menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="32dp"
+        app:button_menu="@menu/main_menu"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
 
-
     <TextView
         android:id="@+id/ac_main_title"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="128dp"
+        android:layout_marginTop="24dp"
         android:text="健身"
+        android:textAlignment="center"
         android:textColor="@color/textWrite"
         android:textSize="56sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/ac_main_bck" />
+        app:layout_constraintTop_toBottomOf="@+id/ac_main_menu" />
 
     <android.support.v7.widget.RecyclerView
-        android:overScrollMode="never"
         android:id="@+id/ac_main_recycler"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="64dp"
         android:layout_marginTop="64dp"
+        android:overScrollMode="never"
         app:layout_constraintBottom_toBottomOf="@+id/ac_main_bck"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

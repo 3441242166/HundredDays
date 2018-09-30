@@ -4,27 +4,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     tools:context=".activity.PlanMessageActivity">
     <ImageView
-        android:fitsSystemWindows="true"
         android:id="@+id/ac_message_blurbck"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop" />
 
     <ImageView
-        android:fitsSystemWindows="true"
+        android:transitionName="bck"
         android:id="@+id/ac_message_bck"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop" />
 
     <android.support.v4.widget.NestedScrollView
+        android:overScrollMode="never"
         android:id="@+id/ac_message_nested"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:fillViewport="true"
         android:fitsSystemWindows="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         app:layout_constraintEnd_toEndOf="parent"
@@ -35,22 +33,20 @@
             android:id="@+id/ac_message_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fitsSystemWindows="true"
             android:orientation="vertical">
 
             <include
-                android:fitsSystemWindows="true"
                 layout="@layout/head_plan_message"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
-            <com.example.administrator.myview.MyCalendar
-                android:id="@+id/ac_message_calendar"
-                android:fitsSystemWindows="true"
+            <ViewStub
+                android:layout_marginBottom="30dp"
+                android:id="@+id/ac_message_stub"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="200dp"
-                android:layout_marginTop="50dp" />
+                android:layout="@layout/content_plan_message" />
+
 
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>

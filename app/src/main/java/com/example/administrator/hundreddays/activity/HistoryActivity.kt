@@ -58,8 +58,8 @@ class HistoryActivity : BaseActivity() , HistoryView {
             if( offset == total){
                 ac_history_spinner.visibility = View.INVISIBLE
             }else{
-                Log.i(TAG,"offset != total ")
                 ac_history_spinner.visibility = View.VISIBLE
+                Log.i(TAG,"offset != total  ${(1 - offset / total).toFloat()}")
                 ac_history_spinner.alpha = ((1 - offset / total).toFloat())
             }
         }

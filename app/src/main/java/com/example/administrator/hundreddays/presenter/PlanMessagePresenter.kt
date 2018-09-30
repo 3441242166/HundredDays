@@ -9,7 +9,7 @@ import com.bumptech.glide.request.transition.Transition
 import com.example.administrator.hundreddays.bean.History
 import com.example.administrator.hundreddays.bean.Sign
 import com.example.administrator.hundreddays.util.DATETYPE
-import com.example.administrator.hundreddays.util.blurImageView
+import com.example.administrator.hundreddays.util.blurBitmap
 import com.example.administrator.hundreddays.util.getNowString
 import com.example.administrator.hundreddays.view.PlanMessageView
 import io.realm.Realm
@@ -28,7 +28,7 @@ class PlanMessagePresenter(val context: Context,val view: PlanMessageView,val re
                 ?.equalTo("id",id)
                 ?.findFirst()
         planId = temp?.plan!!.ID!!
-        history = temp!!
+        history = temp
         view.returnMessage(history.plan!!,history.keepDay,history.state,history.lastSignDate == getNowString(DATETYPE.DATE_DATE))
         realm?.commitTransaction()
         //------------------------------------------------------------------------------------------
@@ -40,7 +40,7 @@ class PlanMessagePresenter(val context: Context,val view: PlanMessageView,val re
     }
     private val target =object :  SimpleTarget<Bitmap>(1080,1920){
         override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-            view.setBlurBck(blurImageView(context,resource,25f)!!)
+            view.setBlurBck(blurBitmap(context,resource,25f)!!)
         }
     }
 

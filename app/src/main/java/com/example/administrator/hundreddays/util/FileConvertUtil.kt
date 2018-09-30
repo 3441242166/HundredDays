@@ -1,5 +1,6 @@
 package com.example.administrator.hundreddays.util
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
@@ -16,10 +17,9 @@ val PRIVATE_PATH = BaseApplication.context.getExternalFilesDir(Environment.DIREC
 
 val CREATE_PLAN = "${Environment.getExternalStorageDirectory()}/HundredDays/temp.jpg"
 
+//----------------------------------------文件读写--------------------------------------------------
 /**
- * 向本地SD卡写网络图片
- *
- * @param bitmap
+ * 向本地SD卡写图片
  */
 fun saveBitmapToLocal(imgName: String, bitmap: Bitmap?): String {
 
@@ -36,37 +36,41 @@ fun saveBitmapToLocal(imgName: String, bitmap: Bitmap?): String {
     return file.toString()
 
 }
-
+/**
+ * 通过指定路径获取Bitmap
+ */
 fun getBitmapFromLocal(imgPath: String?): Bitmap? {
     Log.i(TAG, "getBitmapFromLocal  $imgPath")
     return BitmapFactory.decodeFile(imgPath)
 }
-
-fun getPathFromUri(uri: Uri?):String{
-    val filePath: String
-    //URI的scheme直接就是file://.....
-    if ("file" == uri?.scheme) {
-        //直接调用getPath方法就可以了
-        filePath = uri.path
-    } else {
-        val filePathColumn = arrayOf(MediaStore.Images.Media.DATA)
-        val cursor = BaseApplication.context.contentResolver
-                .query(uri, filePathColumn, null, null, null)
-        cursor!!.moveToFirst()
-        val path = cursor.getColumnIndex(filePathColumn[0])
-        filePath = cursor.getString(path)
-        cursor.close()
+/**
+ * 通过指定URI获取Bitmap
+ */
+fun getBitmapFromUri(context: Context,uri: Uri?): Bitmap? {
+    if(uri == null){
+        return null
     }
-
-    Log.i(TAG, "getPathFromUri  $filePath")
-    return filePath
+    return getBitmapFromLocal(getRealPathFromURI(context,uri))
 }
-
-
-fun getBitmapFromUri(uri: Uri?): Bitmap? {
-    return BitmapFactory.decodeFile(getPathFromUri(uri))
+/**
+ * 获取指定URI的文件路径
+ */
+fun getRealPathFromURI(context: Context,contentUri:Uri):String{
+    var path = ""
+    val proj = arrayOf(MediaStore.Images.Media.DATA)
+    val cursor = context.contentResolver.query(contentUri, proj, null, null, null);
+    if (cursor.moveToFirst()) {
+        val column = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        path = cursor.getString(column)
+    }
+    cursor.close()
+    Log.i(TAG, "getRealPathFromURI  $path")
+    return path
 }
+//----------------------------------------文件读写--------------------------------------------------
 
+
+//----------------------------------------图片压缩--------------------------------------------------
 // 质量压缩法：
 fun compressImage(image: Bitmap?, name: String): String? {
     val filepath = "$PRIVATE_PATH/$name"
@@ -91,7 +95,6 @@ fun compressImage(image: Bitmap?, name: String): String? {
         return ""
     }
 }
-
 // 质量压缩法：
 fun compressImage(image: Bitmap?): Bitmap? {
     return try {
@@ -109,4 +112,8 @@ fun compressImage(image: Bitmap?): Bitmap? {
         e.printStackTrace()
         null
     }
+}
+//----------------------------------------图片压缩--------------------------------------------------
+fun getBlurPath(path:String):String{
+    return path+"blur"
 }

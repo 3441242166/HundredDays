@@ -1,5 +1,6 @@
 package com.example.administrator.hundreddays.activity
 
+import android.Manifest
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
@@ -15,20 +16,25 @@ import android.content.res.TypedArray
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.net.Uri
-import android.os.Environment
 import android.util.Log
+import android.view.View
 import android.widget.EditText
+import android.widget.Switch
 import com.bumptech.glide.Glide
-import com.example.administrator.hundreddays.bean.Plan
 import com.example.administrator.hundreddays.constant.*
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog
 import java.util.*
-import com.example.administrator.hundreddays.util.*
-import java.io.File
+import android.graphics.BitmapFactory
+import android.R.attr.bitmap
+import android.content.pm.PackageManager
+import android.support.v4.app.ActivityCompat
+import android.support.v4.content.ContextCompat
 
 
 class CreatePlanActivity : BarBaseActivity() ,CreatePlanView {
-    private val TAG = "CreatePlanActivity"
+
+
+    private val TAG = "CreatePlanTAG"
 
     private val presenter = CreatePlanPresenter(this,this)
 
@@ -37,8 +43,9 @@ class CreatePlanActivity : BarBaseActivity() ,CreatePlanView {
     lateinit var txFrequence:TextView
     lateinit var txRemind:TextView
     lateinit var img:ImageView
+    lateinit var swRemind:Switch
 
-    var bitmap:Bitmap? = null
+    var bckUri:Uri? = null
     var planDays:Int = 30
     var frequentDay:Int = 1
 
@@ -47,17 +54,25 @@ class CreatePlanActivity : BarBaseActivity() ,CreatePlanView {
     override val contentView: Int get() = R.layout.activity_creat_plan
 
     override fun init(savedInstanceState: Bundle?) {
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this,arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),10)
+        }
+
+
         setTitle("创建新计划")
         initView()
         initEvent()
+        presenter.init()
     }
 
     private fun initView(){
+        android.R.anim.slide_out_right
         txTitle = find(R.id.ac_creat_title)
         txDays = find(R.id.ac_creat_day)
         txFrequence = find(R.id.ac_creat_frequence)
-        txRemind = find(R.id.ac_creat_remind)
+        txRemind = find(R.id.ac_creat_remindtime)
         img = find(R.id.ac_creat_img)
+        swRemind = find(R.id.ac_creat_remind)
 
         processDialog = MaterialDialog.Builder(this).title("Ing....")
                 .progress(true, 100, true)
@@ -93,6 +108,7 @@ class CreatePlanActivity : BarBaseActivity() ,CreatePlanView {
                         txDays.text = ar.getString(dialog.selectedIndex)
                         planDays = dialog.selectedIndex + 30
                         dialog.dismiss()
+                        ar.recycle()
                     }
                     .show()
         }
@@ -112,6 +128,7 @@ class CreatePlanActivity : BarBaseActivity() ,CreatePlanView {
                         frequentDay = dialog.selectedIndex + 1
                         txFrequence.text = ar.getString(dialog.selectedIndex)
                         dialog.dismiss()
+                        ar.recycle()
                     }
                     .show()
         }
@@ -130,10 +147,22 @@ class CreatePlanActivity : BarBaseActivity() ,CreatePlanView {
 
         }
 
+        swRemind.setOnCheckedChangeListener { buttonView, isChecked ->
+            if(isChecked){
+                txRemind.visibility = View.VISIBLE
+            }else{
+                txRemind.visibility = View.GONE
+            }
+        }
+
     }
 
     fun packagePlan(){
-        presenter.createPlan(txTitle.text.toString(),txRemind.text.toString(),frequentDay,planDays,bitmap)
+        presenter.createPlan(txTitle.text.toString(),txRemind.text.toString(),frequentDay,planDays,bckUri)
+    }
+
+    override fun setImage(bitmap: Bitmap) {
+        img.setImageBitmap(bitmap)
     }
 
     override fun before() {
@@ -156,8 +185,6 @@ class CreatePlanActivity : BarBaseActivity() ,CreatePlanView {
     }
 
     override fun startIntent(intent: Intent, code: Int) {
-        //val imageUri = Uri.fromFile(File(Environment.getExternalStorageDirectory(), "image.jpg"))
-        //指定照片保存路径（SD卡），image.jpg为一个临时文件，每次拍照后这个图片都会被替换
         startActivityForResult(intent,code)
     }
 
@@ -165,19 +192,18 @@ class CreatePlanActivity : BarBaseActivity() ,CreatePlanView {
         when (requestCode) {
             CAMERA_CODE ->{
                 //获得拍的照片
-                bitmap = data?.extras?.getParcelable("data") as Bitmap
-               // bitmap = getBitmapFromLocal(com.example.administrator.hundreddays.util.CREATE_PLAN)
-                Glide.with(this).load(bitmap).into(img)
+                val temp = data?.extras?.getParcelable("data") as Bitmap
+                Glide.with(this).load(temp).into(img)
             }
             GALLERY_CODE ->{
                 //获取到用户所选图片的Uri
                 if(data?.data == null){
+                    Log.i(TAG,"data is null")
                     return
                 }
-                val uri = data.data
-                bitmap = getBitmapFromUri(uri)
+                bckUri = data.data
 
-                Glide.with(this).load(bitmap).into(img)
+                Glide.with(this).load(data.data).into(img)
             }
         }
     }

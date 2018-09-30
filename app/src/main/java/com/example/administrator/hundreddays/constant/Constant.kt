@@ -34,3 +34,9 @@ const val PLAN_ING = "ing"
 const val PLAN_FAIL = "fail"
 const val PLAN_COMPLETE = "complete"
 const val PLAN_CANCEL = "cancel"
+//--------------------------------------------------------------------------------------------------
+const val HEAD_IMAGE = "headImage"
+const val USER_NAME = "userName"
+//--------------------------------------------------------------------------------------------------
+const val SCREEN_HEIGHT = "headImage"
+const val SCREEN_WIDTH = "userName"

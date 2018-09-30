@@ -6,7 +6,7 @@ import com.example.administrator.hundreddays.bean.History
 
 interface MainView : BaseView<MutableList<History>>{
 
-    fun setBackgroud(bitmap: Bitmap)
+    fun setBackground(path: String)
 
     fun setMessageDialog(str:String)
 

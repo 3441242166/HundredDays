@@ -28,24 +28,20 @@ class PagingScrollHelper {
 
     private val pageIndex: Int
         get() {
-            var p = 0
-            if (mOrientation == ORIENTATION.VERTICAL) {
-                p = offsetY / mRecyclerView!!.height
+            return if (mOrientation == ORIENTATION.VERTICAL) {
+                offsetY / mRecyclerView!!.height
             } else {
-                p = offsetX / mRecyclerView!!.width
+                offsetX / mRecyclerView!!.width
             }
-            return p
         }
 
     private val startPageIndex: Int
         get() {
-            var p = 0
-            if (mOrientation == ORIENTATION.VERTICAL) {
-                p = startY / mRecyclerView!!.height
+            return if (mOrientation == ORIENTATION.VERTICAL) {
+                startY / mRecyclerView!!.height
             } else {
-                p = startX / mRecyclerView!!.width
+                startX / mRecyclerView!!.width
             }
-            return p
         }
 
     internal var mOnPageChangeListener: onPageChangeListener? = null
@@ -73,12 +69,10 @@ class PagingScrollHelper {
     private fun updateLayoutManger() {
         val layoutManager = mRecyclerView!!.layoutManager
         if (layoutManager != null) {
-            if (layoutManager.canScrollVertically()) {
-                mOrientation = ORIENTATION.VERTICAL
-            } else if (layoutManager.canScrollHorizontally()) {
-                mOrientation = ORIENTATION.HORIZONTAL
-            } else {
-                mOrientation = ORIENTATION.NULL
+            mOrientation = when {
+                layoutManager.canScrollVertically() -> ORIENTATION.VERTICAL
+                layoutManager.canScrollHorizontally() -> ORIENTATION.HORIZONTAL
+                else -> ORIENTATION.NULL
             }
             if (mAnimator != null) {
                 mAnimator!!.cancel()
@@ -87,7 +81,6 @@ class PagingScrollHelper {
             startY = 0
             offsetX = 0
             offsetY = 0
-
         }
 
     }

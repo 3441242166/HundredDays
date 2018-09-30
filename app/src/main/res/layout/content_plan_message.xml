@@ -5,13 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <com.example.administrator.myview.CalendarView
-        android:id="@+id/item_calendar_calendar"
-        android:layout_width="match_parent"
+
+    <com.example.administrator.myview.PlanCalendar
+        android:id="@+id/ac_message_calendar"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

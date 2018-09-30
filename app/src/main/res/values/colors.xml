@@ -4,10 +4,10 @@
     <color name="colorPrimaryDark">#464646</color>
     <color name="colorAccent">#ff4081</color>
 
-    <color name="textWrite">#ffffff</color>
-    <color name="itemColor">#cacaca</color>
-    <color name="pureBlack">#000000</color>
-    <color name="secondBlack">#1e1e1e</color>
-    <color name="fabColor">#7e00b7ff</color>
+    <color name="textWrite">#f5f5f5</color>
+    <color name="itemColor">#d0d0d0</color>
+    <color name="pureBlack">#212121</color>
+    <color name="secondBlack">#7b7b7b</color>
+    <color name="fabColor">#d6090909</color>
     <color name="lucidColor">#64000000</color>
 </resources>
