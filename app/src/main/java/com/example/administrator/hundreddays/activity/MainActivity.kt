@@ -1,55 +1,54 @@
 package com.example.administrator.hundreddays.activity
 
-import android.animation.AnimatorInflater
-import android.app.ActivityOptions
 import android.content.Intent
-import android.graphics.Bitmap
+import android.graphics.Color
 import android.os.Bundle
-import android.os.Handler
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.LinearSnapHelper
 import android.support.v7.widget.RecyclerView
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
-import android.view.animation.AlphaAnimation
-import android.view.animation.AnimationSet
+import android.view.animation.LinearInterpolator
+import android.widget.AbsListView
 import android.widget.ImageView
 import android.widget.TextView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.bumptech.glide.request.RequestOptions
 import com.example.administrator.hundreddays.R
 import com.example.administrator.hundreddays.adapter.PlanAdapter
 import com.example.administrator.hundreddays.base.BaseActivity
 import com.example.administrator.hundreddays.bean.History
-import com.example.administrator.hundreddays.constant.CREATE_SUCCESS
-import com.example.administrator.hundreddays.constant.DATA
+import com.example.administrator.hundreddays.constant.*
 import com.example.administrator.hundreddays.presenter.MainPresenter
 import com.example.administrator.hundreddays.util.PagingScrollHelper
 import com.example.administrator.hundreddays.view.MainView
 import com.joaquimley.faboptions.FabOptions
-import org.jetbrains.anko.find
-import org.jetbrains.anko.alert
-import org.jetbrains.anko.startActivity
-import com.example.administrator.hundreddays.constant.CREATE_PLAN
-import com.example.administrator.hundreddays.constant.PLAN_LIST
-import org.jetbrains.anko.toast
+import com.example.administrator.hundreddays.util.getBlurPath
+import com.example.administrator.hundreddays.util.getValueFromSharedPreferences
+import org.jetbrains.anko.*
 
 class MainActivity : BaseActivity() , MainView,View.OnClickListener {
     private val TAG = "MainActivity"
 
     private lateinit var title:TextView
+    private lateinit var preTitle:TextView
+    private lateinit var nextTitle:TextView
     private lateinit var indicate:TextView
+
     private lateinit var bck:ImageView
+    private lateinit var preBck:ImageView
+    private lateinit var nextBck:ImageView
+
     private lateinit var recycler:RecyclerView
     private lateinit var fab: FabOptions
 
     private val mainPresenter:MainPresenter = MainPresenter(this,this)
     private val adapter: PlanAdapter = PlanAdapter(null,this)
     private var scrollHelper: PagingScrollHelper = PagingScrollHelper()
+
+    private lateinit var bckAr:Array<ImageView>
+    private lateinit var titleAr:Array<TextView>
 
     override val contentView: Int get() = R.layout.activity_main
 
@@ -59,6 +58,8 @@ class MainActivity : BaseActivity() , MainView,View.OnClickListener {
         mainPresenter.initData()
     }
 
+    var startPos = 0f
+    val maxPos = getValueFromSharedPreferences(SCREEN_WIDTH)!!.toInt()
     private fun initEvent() {
         fab.setOnClickListener(this)
 
@@ -72,8 +73,8 @@ class MainActivity : BaseActivity() , MainView,View.OnClickListener {
 
         adapter.setOnItemChildClickListener { _, _, position ->
             toast("sign")
-            MaterialDialog.Builder(this).title("测试")
-                    .input("输入一些东西把","测试") { _, input ->
+            MaterialDialog.Builder(this).title("日记")
+                    .input("写一些东西吧","") { _, input ->
                         mainPresenter.sign(position,input.toString())
                     }.show()
         }
@@ -81,12 +82,12 @@ class MainActivity : BaseActivity() , MainView,View.OnClickListener {
         scrollHelper.setOnPageChangeListener(object : PagingScrollHelper.onPageChangeListener {
             override fun onPageChange(index: Int) {
                 mainPresenter.changeIndex(index)
+                startPos = 0f
             }
         })
 
         title.setOnClickListener{
             //title.animate().translationX(50f)
-
             alert("你好","标题"){
             positiveButton("yes") {}
             negativeButton("no"){}
@@ -98,7 +99,7 @@ class MainActivity : BaseActivity() , MainView,View.OnClickListener {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                Log.i(TAG,"s =$s  start=$start before=$before count=$count")
+//                Log.i(TAG,"s =$s  start=$start before=$before count=$count")
 //                val animationSet = AnimationSet(true)
 //                val alphaAnimation1 = AlphaAnimation(0f, 1f)
 //                alphaAnimation1.duration = 200
@@ -112,17 +113,35 @@ class MainActivity : BaseActivity() , MainView,View.OnClickListener {
 
         })
 
+        recycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                startPos +=dx
+                val alpha = (255*startPos/maxPos)
+                mainPresenter.changeAlpha(alpha)
+                Log.i(TAG,"dx = $dx  dy = $dy startPos = $startPos  alpha = $alpha")
+            }
+        })
     }
 
     private fun initView() {
         title = find(R.id.ac_main_title)
+        preTitle = find(R.id.ac_main_title_pre)
+        nextTitle = find(R.id.ac_main_title_next)
         indicate = find(R.id.ac_main_indicate)
         bck = find(R.id.ac_main_bck)
+        preBck = find(R.id.ac_main_bck_pre)
+        nextBck = find(R.id.ac_main_bck_next)
         recycler = find(R.id.ac_main_recycler)
         fab = find(R.id.ac_main_menu)
+        preBck.imageAlpha = 0
+        nextBck.imageAlpha = 0
+
+        bckAr= arrayOf(preBck,bck,nextBck)
+        titleAr = arrayOf(preTitle,title,nextTitle)
 
         recycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        //LinearSnapHelper().attachToRecyclerView(recycler)
+
         recycler.adapter = adapter
         scrollHelper.setUpRecycleView(recycler)
 
@@ -174,31 +193,39 @@ class MainActivity : BaseActivity() , MainView,View.OnClickListener {
         adapter.setNewData(data)
     }
 
-    override fun setMessage(title:String, index:String) {
+    override fun setMessage(pos:Int,name:String) {
 
-        val animation = AnimatorInflater.loadAnimator(this,R.animator.slide_in_left)
-        animation.setTarget(title)
-        animation.start()
+//        val animation = AnimatorInflater.loadAnimator(this,R.animator.slide_in_left)
+//        animation.setTarget(this.name)
+//        animation.start()
 
-        this.title.text = title
-        indicate.text = index
+//        title.animate()
+//                .alpha(1f)
+//                .interpolator = LinearInterpolator()
+
+        //title.postDelayed({title.text = name},300)
+        titleAr[pos].text = name
     }
 
-    override fun setBackground(path: String) {
-//        Glide.with(this)
-//                .load(bitmap)
-//                .transition(DrawableTransitionOptions()
-//                        .crossFade())
-//                .apply(RequestOptions()).into(bck)
+    override fun setBackground(pos:Int,path: String) {
         Glide.with(this)
                 .load(path)
-                .apply(RequestOptions()).into(bck)
+                .into(bckAr[pos])
     }
 
     override fun setMessageDialog(str: String) {
         alert(str,"提醒"){
             positiveButton("yes") { dialog -> dialog.dismiss() }
         }.show()
+    }
+
+    override fun setViewAlpha(index: Int, alpha: Float) {
+        bckAr[index].imageAlpha  = alpha.toInt()
+        titleAr[index].textColor  = Color.argb(alpha.toInt(), 255, 255, 255)
+    }
+
+    override fun setIndex(index: String) {
+        indicate.text = index
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

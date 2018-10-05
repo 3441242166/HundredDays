@@ -1,4 +1,4 @@
-package com.example.administrator.myview
+package com.example.administrator.myview.calendar
 
 import android.content.Context
 import android.graphics.Canvas
@@ -26,7 +26,10 @@ class CalendarView @JvmOverloads constructor(context: Context, attrs: AttributeS
     private var itemWidth = 0f
     private var itemHeight = 0f
 
+    //此View所表现的日期的Calendar
     private var curCalendar:Calendar = Calendar.getInstance()
+    //当前的日期的Calendar
+    private var nowCalendar:Calendar = Calendar.getInstance()
 
     lateinit var signMap: Map<String, Sign>
 
@@ -52,7 +55,7 @@ class CalendarView @JvmOverloads constructor(context: Context, attrs: AttributeS
         specialBckPaint.color = Color.rgb(103, 182, 94)       //设置画笔颜色
         specialBckPaint.style = Paint.Style.FILL  //设置画笔模式为填充
 
-        pointPaint.color = Color.rgb(73, 139, 219)
+        pointPaint.color = Color.argb(50,164, 164, 164)
         pointPaint.style = Paint.Style.FILL
         pointPaint.isAntiAlias = true
         this.isClickable = true
@@ -99,7 +102,6 @@ class CalendarView @JvmOverloads constructor(context: Context, attrs: AttributeS
         canvas.drawColor(Color.WHITE)
 
         val calendar = curCalendar.clone() as Calendar
-        val tempCalendar = calendar.clone() as Calendar
 
         calendar.set(Calendar.DAY_OF_MONTH,1)
         val prevDays = calendar.get(Calendar.DAY_OF_WEEK)-1
@@ -116,14 +118,15 @@ class CalendarView @JvmOverloads constructor(context: Context, attrs: AttributeS
                 canvas.drawRect(posX - itemWidth / 2 + 1,posY- itemWidth / 2 + 1,posX + itemWidth / 2 - 1,posY + itemWidth / 2 - 1,bckPaint)
             }
             // 绘制文字
-            if(tempCalendar.get(Calendar.YEAR)==calendar.get(Calendar.YEAR) && tempCalendar.get(Calendar.MONTH)==calendar.get(Calendar.MONTH)){
+            if(curCalendar.get(Calendar.YEAR)==calendar.get(Calendar.YEAR) && curCalendar.get(Calendar.MONTH)==calendar.get(Calendar.MONTH)){
                 canvas.drawText(calendar.get(Calendar.DAY_OF_MONTH).toString(), posX, posY,textPaint)
             }else{
                 canvas.drawText(calendar.get(Calendar.DAY_OF_MONTH).toString(), posX, posY,specialTextPaint)
             }
-
-            //canvas.drawCircle(posX,posY+ itemWidth / 3 ,8f,pointPaint)
-            canvas.drawRoundRect(posX-itemHeight/4,posY+itemWidth / 3-2,posX+itemHeight/4,posY+itemWidth / 3+2,2f,2f,pointPaint)
+            if(nowCalendar.get(Calendar.YEAR)==calendar.get(Calendar.YEAR) && nowCalendar.get(Calendar.MONTH)==calendar.get(Calendar.MONTH) && nowCalendar.get(Calendar.DAY_OF_MONTH)==calendar.get(Calendar.DAY_OF_MONTH)){
+                canvas.drawCircle(posX,posY,36f,pointPaint)
+            }
+            //canvas.drawRoundRect(posX-itemHeight/4,posY+itemWidth / 3-2,posX+itemHeight/4,posY+itemWidth / 3+2,2f,2f,pointPaint)
 
             if(pos % 7 == 0){
                 posX = itemHeight/2

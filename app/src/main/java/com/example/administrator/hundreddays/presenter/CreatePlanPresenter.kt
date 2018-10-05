@@ -17,8 +17,10 @@ import android.view.WindowManager
 import android.widget.PopupWindow
 import android.widget.TextView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.FutureTarget
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
+import com.chad.library.adapter.base.BaseQuickAdapter
 import com.example.administrator.hundreddays.R
 import com.example.administrator.hundreddays.base.BaseApplication
 import com.example.administrator.hundreddays.bean.History
@@ -28,6 +30,7 @@ import com.example.administrator.hundreddays.util.*
 import com.example.administrator.hundreddays.view.CreatePlanView
 import io.realm.Realm
 import org.jetbrains.anko.find
+import java.io.File
 import java.util.*
 
 class CreatePlanPresenter(val view: CreatePlanView, private val context: Context,val realm: Realm? = Realm.getDefaultInstance()) {
@@ -58,30 +61,28 @@ class CreatePlanPresenter(val view: CreatePlanView, private val context: Context
         view.before()
 
         path = getNowString(DATETYPE.DATE_TIME)
+        realm?.beginTransaction()
 
-            realm?.beginTransaction()
-
-            val plan = realm?.createObject(Plan::class.java,UUID.randomUUID().toString())
-            if(plan == null){
-                realm?.commitTransaction()
-                Log.i(TAG,"create plan error")
-                return
-            }
-
-            plan.imgPath = path
-            plan.title = title
-            plan.createDateTime = getNowString(DATETYPE.DATE_TIME)
-            plan.remindTime = remindTime
-            plan.targetDay = targetDay
-            plan.frequentDay = frequent
-
-            val history = realm?.createObject(History::class.java,UUID.randomUUID().toString())
-            history?.plan = plan
-            history?.keepDay = 0
-            history?.state = PLAN_ING
-            history?.lastSignDate = getAddDayString(getNowString(DATETYPE.DATE_DATE),-1)
-
+        val plan = realm?.createObject(Plan::class.java,UUID.randomUUID().toString())
+        if(plan == null){
             realm?.commitTransaction()
+            Log.i(TAG,"create plan error")
+            return
+        }
+        plan.imgPath = getPath(path)
+        plan.title = title
+        plan.createDateTime = getNowString(DATETYPE.DATE_TIME)
+        plan.remindTime = remindTime
+        plan.targetDay = targetDay
+        plan.frequentDay = frequent
+
+        val history = realm?.createObject(History::class.java,UUID.randomUUID().toString())
+        history?.plan = plan
+        history?.keepDay = 0
+        history?.state = PLAN_ING
+        history?.lastSignDate = getAddDayString(getNowString(DATETYPE.DATE_DATE),-1)
+
+        realm?.commitTransaction()
 
         Glide.with(context) // could be an issue!
                 .asBitmap()
@@ -94,8 +95,8 @@ class CreatePlanPresenter(val view: CreatePlanView, private val context: Context
         override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
             //view.setImage(resource)
             saveBitmapToLocal(path,resource)
-            saveBitmapToLocal(getBlurPath(path),blurBitmap(context,resource,15f))
-
+            saveBitmapToLocal(getBlurPath(path),blurBitmap(context,resource,5f))
+            saveBitmapToLocal(getMessageBlurPath(path),blurBitmap(context,resource,25f))
             view.after()
             view.success("创建成功")
         }

@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import com.example.administrator.hundreddays.view.StatisticView
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.util.Log
 import com.example.administrator.hundreddays.constant.HEAD_IMAGE
 import com.example.administrator.hundreddays.constant.USER_NAME
 import com.example.administrator.hundreddays.util.*
@@ -15,11 +16,12 @@ class StatisticPresenter(val context: Context,val view: StatisticView){
 
 
     fun init(){
-        val path = getValueFromSharedPreferences(HEAD_IMAGE)
+        val path:String? = getValueFromSharedPreferences(HEAD_IMAGE)
         val bckBitmap: Bitmap?
         val headBitmap: Bitmap?
-
+        Log.i(TAG,"path = $path")
         headBitmap = if(path.isNullOrEmpty()){
+            Log.i(TAG,"headBitmap is null")
             BitmapFactory.decodeStream(context.assets.open("bck.jpg"))
         }else{
             getBitmapFromLocal(path)

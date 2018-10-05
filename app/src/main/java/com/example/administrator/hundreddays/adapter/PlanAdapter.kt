@@ -1,6 +1,7 @@
 package com.example.administrator.hundreddays.adapter
 
 import android.content.Context
+import android.widget.Button
 import com.bumptech.glide.Glide
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
@@ -21,8 +22,12 @@ class PlanAdapter(data: MutableList<History>?,val context: Context) : BaseQuickA
                 .load(item.plan?.imgPath)
                 .into(helper.getView(R.id.item_plan_image))
 
-        if(item.lastSignDate == getNowString(DATETYPE.DATE_DATE))
-            helper.setText(R.id.item_plan_sign, "今日已签到")
+        val button = helper.getView<Button>(R.id.item_plan_sign)
+
+        if(item.lastSignDate == getNowString(DATETYPE.DATE_DATE)) {
+            button.setBackgroundResource(R.drawable.shap_signed)
+            button.text = "今日已签到"
+        }
 
         helper.addOnClickListener(R.id.item_plan_sign)
     }

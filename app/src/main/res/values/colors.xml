@@ -10,4 +10,7 @@
     <color name="secondBlack">#7b7b7b</color>
     <color name="fabColor">#d6090909</color>
     <color name="lucidColor">#64000000</color>
+    <color name="redColor">#e2a91212</color>
+
+    <color name="ceshiColor">#5aa4a4a4</color>
 </resources>

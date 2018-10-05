@@ -1,12 +1,10 @@
 package com.example.administrator.hundreddays.activity
 
-import android.graphics.Bitmap
 import android.os.Bundle
 import android.os.Handler
 import android.support.constraint.ConstraintLayout
 import android.support.v4.widget.NestedScrollView
 import android.view.ViewStub
-import android.widget.CalendarView
 import com.example.administrator.hundreddays.R
 import com.example.administrator.hundreddays.base.BaseActivity
 import android.widget.ImageView
@@ -18,9 +16,11 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.administrator.hundreddays.bean.Plan
 import com.example.administrator.hundreddays.bean.Sign
 import com.example.administrator.hundreddays.constant.DATA
+import com.example.administrator.hundreddays.constant.SCREEN_HEIGHT
 import com.example.administrator.hundreddays.presenter.PlanMessagePresenter
+import com.example.administrator.hundreddays.util.getValueFromSharedPreferences
 import com.example.administrator.hundreddays.view.PlanMessageView
-import com.example.administrator.myview.PlanCalendar
+import com.example.administrator.myview.calendar.PlanCalendar
 import org.jetbrains.anko.find
 import org.jetbrains.anko.toast
 
@@ -51,11 +51,11 @@ class PlanMessageActivity : BaseActivity() ,PlanMessageView{
         Handler().postDelayed({presenter.lateInit()},100)
     }
 
+    private val MAX_POSITION = getValueFromSharedPreferences(SCREEN_HEIGHT)!!.toInt()/2
     private fun initEvent() {
-        nestedLayout.setOnScrollChangeListener { v: NestedScrollView?, scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int ->
-            if(scrollY<300){
-                val max = 300
-                bck.imageAlpha = 255 - (255*scrollY/max)
+        nestedLayout.setOnScrollChangeListener { _: NestedScrollView?, _: Int, scrollY: Int, _: Int, _: Int ->
+            if(scrollY<MAX_POSITION){
+                bck.imageAlpha = 255 - (255*scrollY/MAX_POSITION)
             }else{
                 bck.imageAlpha = 0
             }
@@ -93,7 +93,7 @@ class PlanMessageActivity : BaseActivity() ,PlanMessageView{
         viewStub.inflate()
         calendar = find(R.id.ac_message_calendar)
         calendar.setData(signMap)
-        calendar.setOnDateSelectListener(object :PlanCalendar.OnDateSelectListener{
+        calendar.setOnDateSelectListener(object : PlanCalendar.OnDateSelectListener{
             override fun onDateSelect(date: String) {
                 toast(date)
             }
@@ -101,8 +101,10 @@ class PlanMessageActivity : BaseActivity() ,PlanMessageView{
         })
     }
 
-    override fun setBlurBck(blurImageView: Bitmap) {
-        blurBck.setImageBitmap(blurImageView)
+    override fun setBlurBck(path: String) {
+        Glide.with(this)
+                .load(path)
+                .into(blurBck)
     }
 
 }

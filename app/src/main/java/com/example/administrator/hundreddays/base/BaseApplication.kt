@@ -24,7 +24,6 @@ class BaseApplication : Application() {
         val dm = resources.displayMetrics;
         val heigth = dm.heightPixels
         val width = dm.widthPixels
-        //Log.i(TAG,"height = $heigth width = $width")
         saveToSharedPreferences(SCREEN_HEIGHT, heigth.toString())
         saveToSharedPreferences(SCREEN_WIDTH, width.toString())
     }

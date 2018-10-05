@@ -1,5 +1,6 @@
-package com.example.administrator.myview
+package com.example.administrator.myview.calendar
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.support.constraint.ConstraintLayout
 import android.support.v7.widget.LinearLayoutManager
@@ -51,15 +52,17 @@ class PlanCalendar @JvmOverloads constructor(context: Context, attrs: AttributeS
         recycler = find(R.id.view_calendar_recycler)
         message = find(R.id.view_calendar_message)
 
+        title.text = getDateString(getNowString(DATETYPE.DATE_MONTH))
     }
 
+    @SuppressLint("SetTextI18n")
     private fun renderCalendar() {
 
         recycler.layoutManager = layoutManager
         LinearSnapHelper().attachToRecyclerView(recycler)
         scrollHelper.setUpRecycleView(recycler)
 
-        val adapter = CalendarAdapter(data,signMap)
+        val adapter = CalendarAdapter(data, signMap)
         recycler.adapter = adapter
         recycler.setHasFixedSize(true)
         recycler.isNestedScrollingEnabled = false
@@ -70,32 +73,45 @@ class PlanCalendar @JvmOverloads constructor(context: Context, attrs: AttributeS
             val sign = signMap[date]
             selectListener.onDateSelect(date)
             if (sign != null) {
-                message.text = "$date\n ${sign.message}"
+                if(sign.message == "") {
+                    message.text = "$date\n 今天没有记东西哦"
+                }else{
+                    message.text = "$date\n ${sign.message}"
+                }
             }else{
                 message.text =  "$date\n 今天没有签到哦"
             }
         }
 
-
-
+        val cur = Calendar.getInstance().time
+        val date = getDateString(cur,DATETYPE.DATE_DATE)
+        title.text = getDateString(cur,DATETYPE.DATE_MONTH)
+        val sign = signMap[getDateString(cur,DATETYPE.DATE_DATE)]
+        if (sign != null) {
+            if(sign.message == "") {
+                message.text = "$date\n 今天没有记东西哦"
+            }else{
+                message.text = "$date\n ${sign.message}"
+            }
+        }else{
+            message.text =  "$date\n 今天没有签到哦"
+        }
     }
 
     private fun bindEvent() {
         scrollHelper.setOnPageChangeListener(object : PagingScrollHelper.onPageChangeListener {
             override fun onPageChange(index: Int) {
                 position = index
-                //title.text = getDateString(data[index].time,DATETYPE.DATE_MONTH)
+                title.text = getDateString(data[index].time,DATETYPE.DATE_MONTH)
             }
         })
 
         imgBack.setOnClickListener {
-//            layoutManager.scrollToPositionWithOffset(--position, 0)
-//            layoutManager.stackFromEnd = true
+
         }
 
         imgNext.setOnClickListener {
-//            layoutManager.scrollToPositionWithOffset(--position, 0)
-//            layoutManager.stackFromEnd = true
+
         }
 
     }
@@ -103,9 +119,15 @@ class PlanCalendar @JvmOverloads constructor(context: Context, attrs: AttributeS
     fun setData(signMap: MutableMap<String, Sign>){
         this.signMap = signMap
         initCalendarList()
+        if(data.size==0){
+            data.add(Calendar.getInstance())
+        }
         renderCalendar()
     }
 
+    /**
+     *  获取计划月份间隔
+     */
     private fun initCalendarList() {
         val startStr = StringBuilder()
         val endStr = StringBuilder()
@@ -123,6 +145,7 @@ class PlanCalendar @JvmOverloads constructor(context: Context, attrs: AttributeS
                 endStr.replace(0,endStr.length,key)
             }
         }
+
         val startList = startStr.split("-")
         val startYear = startList[0].toInt()
         val startMonth = startList[1].toInt()
@@ -134,6 +157,7 @@ class PlanCalendar @JvmOverloads constructor(context: Context, attrs: AttributeS
         Log.i(TAG,"startStr = $startStr  endStr = $endStr")
 
         val dif = (endYear - startYear) * 12 + endMonth - startMonth
+
         Log.i(TAG,"startYear $startYear startMonth $startMonth endYear $endYear endMonth $endMonth")
         val calendar = Calendar.getInstance()
         calendar.time = getDateByDateString(startStr.toString())

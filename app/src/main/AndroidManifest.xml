@@ -12,6 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/NoActionBarTheme">
+
         <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,13 +26,12 @@
         <activity android:name=".activity.SettingActivity" />
         <activity
             android:name=".activity.HistoryActivity"
-            android:label="@string/title_activity_task"
-            android:theme="@style/NoActionBarTheme" />
+            android:label="@string/title_activity_task" />
         <activity
             android:name=".activity.StatisticActivity"
             android:label="@string/title_activity_statistic"
-            android:theme="@style/NoActionBarTheme"></activity>
-
+            android:theme="@style/NoActionBarTheme" />
+        <activity android:name=".activity.ChooseImageActivity"></activity>
     </application>
 
 </manifest>

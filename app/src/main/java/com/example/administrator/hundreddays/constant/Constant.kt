@@ -35,8 +35,8 @@ const val PLAN_FAIL = "fail"
 const val PLAN_COMPLETE = "complete"
 const val PLAN_CANCEL = "cancel"
 //--------------------------------------------------------------------------------------------------
-const val HEAD_IMAGE = "headImage"
-const val USER_NAME = "userName"
+const val HEAD_IMAGE = "head_image"
+const val USER_NAME = "user_name"
 //--------------------------------------------------------------------------------------------------
 const val SCREEN_HEIGHT = "headImage"
 const val SCREEN_WIDTH = "userName"

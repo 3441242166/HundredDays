@@ -3,6 +3,7 @@ package com.example.administrator.hundreddays.activity
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.LinearSnapHelper
 import android.support.v7.widget.RecyclerView
@@ -78,7 +79,7 @@ class HistoryActivity : BaseActivity() , HistoryView {
         spinnerSort = find(R.id.ac_spinner_3)
         recycler = find(R.id.ac_plan_recycler)
 
-        recycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        recycler.layoutManager = GridLayoutManager(this, 2)
         recycler.adapter = adapter
     }
 

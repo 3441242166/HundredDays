@@ -115,5 +115,13 @@ fun compressImage(image: Bitmap?): Bitmap? {
 }
 //----------------------------------------图片压缩--------------------------------------------------
 fun getBlurPath(path:String):String{
-    return path+"blur"
+    return path+"blurNormal"
+}
+
+fun getMessageBlurPath(path:String):String{
+    return path+"blurMax"
+}
+
+fun getPath(path:String):String{
+    return "$PRIVATE_PATH/$path"
 }

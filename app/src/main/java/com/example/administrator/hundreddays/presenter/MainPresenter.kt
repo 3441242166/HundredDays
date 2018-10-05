@@ -22,7 +22,11 @@ class MainPresenter(val view: MainView, private val context: Context,val realm: 
 
     lateinit var planList:MutableList<History>
 
-    var position = 0
+    private var position = 0
+    // 指向图片所在位置
+    private var pre = 0
+    private var now = 1
+    private var next = 2
 
     fun initData(){
         var sum: Int
@@ -40,7 +44,12 @@ class MainPresenter(val view: MainView, private val context: Context,val realm: 
         }else {
             view.setVisibility(true)
             view.setData(planList)
-            changeIndex(position,true)
+            view.setBackground(now,getBlurPath(planList[position].plan!!.imgPath))
+            view.setMessage(next, planList[position].plan!!.title)
+            if(planList.size>position+1){
+                view.setBackground(next,getBlurPath(planList[position+1].plan!!.imgPath))
+                view.setMessage(next, planList[position+1].plan!!.title)
+            }
         }
         realm?.commitTransaction()
         if(sum > 0){
@@ -81,13 +90,50 @@ class MainPresenter(val view: MainView, private val context: Context,val realm: 
         view.signSuccess(pos)
     }
 
+    /**
+     * 当滑动切换 item 时
+     */
     fun changeIndex(index:Int,isUpdate:Boolean = false){
+        Log.i(TAG,"before pre = $pre  now = $now  next = $next")
         if(position == index && !isUpdate){
             return
         }
+        if(index>position){
+            val temp = now
+            now = next
+            next = pre
+            pre = temp
+
+            if(index<planList.size-1) {
+                view.setMessage(next, planList[index+1].plan!!.title)
+                view.setBackground(next, getBlurPath(planList[index+1].plan!!.imgPath))
+            }
+        }else{
+            val temp = now
+            now = pre
+            pre = next
+            next = temp
+
+            if(index>0) {
+                view.setMessage(pre, planList[index-1].plan!!.title)
+                view.setBackground(pre, getBlurPath(planList[index-1].plan!!.imgPath))
+            }
+        }
         position = index
-        view.setMessage(planList[index].plan!!.title, "${index+1}/${planList.size}")
-        view.setBackground(getBlurPath(planList[index].plan!!.imgPath))
+        view.setIndex("${position+1}/${planList.size}")
+
+        Log.i(TAG,"after pre = $pre  now = $now  next = $next")
+    }
+
+    fun changeAlpha(value:Float){
+        //view.setViewAlpha()
+        if(value>0){
+            view.setViewAlpha(now,255-value)
+            view.setViewAlpha(next,value)
+        }else{
+            view.setViewAlpha(now,value+255)
+            view.setViewAlpha(pre,-value)
+        }
     }
 
     private fun checkInvalid():Int{
