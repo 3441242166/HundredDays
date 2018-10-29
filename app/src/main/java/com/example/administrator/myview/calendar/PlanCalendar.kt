@@ -5,6 +5,7 @@ import android.content.Context
 import android.support.constraint.ConstraintLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.LinearSnapHelper
+import android.support.v7.widget.PagerSnapHelper
 import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
 import android.util.Log
@@ -59,7 +60,7 @@ class PlanCalendar @JvmOverloads constructor(context: Context, attrs: AttributeS
     private fun renderCalendar() {
 
         recycler.layoutManager = layoutManager
-        LinearSnapHelper().attachToRecyclerView(recycler)
+        PagerSnapHelper().attachToRecyclerView(recycler)
         scrollHelper.setUpRecycleView(recycler)
 
         val adapter = CalendarAdapter(data, signMap)
@@ -99,7 +100,7 @@ class PlanCalendar @JvmOverloads constructor(context: Context, attrs: AttributeS
     }
 
     private fun bindEvent() {
-        scrollHelper.setOnPageChangeListener(object : PagingScrollHelper.onPageChangeListener {
+        scrollHelper.setOnPageChangeListener(object : PagingScrollHelper.OnPageChangeListener {
             override fun onPageChange(index: Int) {
                 position = index
                 title.text = getDateString(data[index].time,DATETYPE.DATE_MONTH)
@@ -107,11 +108,13 @@ class PlanCalendar @JvmOverloads constructor(context: Context, attrs: AttributeS
         })
 
         imgBack.setOnClickListener {
-
+            if(position - 1>= 0 )
+                recycler.scrollToPosition(--position)
         }
 
         imgNext.setOnClickListener {
-
+            if(position + 1 < data.size )
+                recycler.scrollToPosition(++position)
         }
 
     }

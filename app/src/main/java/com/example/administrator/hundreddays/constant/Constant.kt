@@ -10,25 +10,8 @@ const val DELETE_SUCCESS:Int = 1
 
 const val FILE_NAME = "HundredDays"
 const val DATA = "data"
-
 //--------------------------------------------------------------------------------------------------
-const val TABLE_PLAN = "plan"
-const val TABLE_ING = "ing"
-const val TABLE_HISTORY = "history"
-const val TABLE_SIGN = "sign"
-
-const val DB_ID = "id"
-const val DB_TITLE = "title"
-const val DB_IMAGE_PATH = "image_path"
-const val DB_DATE = "date"
-const val DB_LAST_DATE = "last_date"
-const val DB_CREATE_DATE = "create_date"
-const val DB_TARGET_DAY = "target_day"
-const val DB_KEEP_DAY = "keep_day"
-const val DB_IS_FINISH = "isfinish"
-const val DB_FREQUENT_DAY = "frequent_day"
-const val DB_MESSAGE = "message"
-const val DB_REMIND = "remind_time"
+const val IMAGE_PATH = "ing"
 //--------------------------------------------------------------------------------------------------
 const val PLAN_ING = "ing"
 const val PLAN_FAIL = "fail"
@@ -40,3 +23,4 @@ const val USER_NAME = "user_name"
 //--------------------------------------------------------------------------------------------------
 const val SCREEN_HEIGHT = "headImage"
 const val SCREEN_WIDTH = "userName"
+//--------------------------------------------------------------------------------------------------

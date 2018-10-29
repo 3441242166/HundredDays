@@ -48,7 +48,7 @@
             <include
                 layout="@layout/head_plan_message"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="wrap_content" />
 
             <ViewStub
                 android:id="@+id/ac_message_stub"
@@ -57,79 +57,29 @@
                 android:layout_marginBottom="30dp"
                 android:layout="@layout/content_plan_message" />
 
-            <android.support.constraint.ConstraintLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <ImageView
-                    android:id="@+id/imageView7"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toEndOf="@+id/imageView4"
-                    app:layout_constraintTop_toTopOf="@+id/imageView4"
-                    app:srcCompat="@mipmap/ic_launcher_round" />
-
-                <ImageView
-                    android:id="@+id/imageView4"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="8dp"
-                    app:layout_constraintEnd_toStartOf="@+id/imageView7"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toEndOf="@+id/imageView"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@mipmap/ic_launcher_round" />
-
-                <ImageView
-                    android:id="@+id/imageView"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    app:layout_constraintEnd_toStartOf="@+id/imageView4"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/imageView4"
-                    app:srcCompat="@mipmap/ic_launcher_round" />
-
-                <TextView
-                    android:textColor="@color/textWrite"
-                    android:id="@+id/textView17"
-                    android:layout_width="wrap_content"
+                <com.example.administrator.myview.PercentView
+                    android:id="@+id/ac_message_present"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:text="习惯设置"
-                    android:textSize="12sp"
-                    app:layout_constraintEnd_toEndOf="@+id/imageView"
-                    app:layout_constraintStart_toStartOf="@+id/imageView"
-                    app:layout_constraintTop_toBottomOf="@+id/imageView" />
+                    android:layout_margin="10dp"
+                    android:layout_weight="3" />
 
-                <TextView
-                    android:textColor="@color/textWrite"
-                    android:id="@+id/textView18"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginTop="2dp"
-                    android:text="添加新卡片"
-                    android:textSize="12sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="@+id/imageView4"
-                    app:layout_constraintStart_toStartOf="@+id/imageView4"
-                    app:layout_constraintTop_toBottomOf="@+id/imageView4" />
+                <com.example.administrator.myview.PercentView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:layout_weight="2" />
 
-                <TextView
-                    android:textColor="@color/textWrite"
-                    android:id="@+id/textView19"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:text="排序卡片"
-                    android:textSize="10sp"
-                    app:layout_constraintEnd_toEndOf="@+id/imageView7"
-                    app:layout_constraintStart_toStartOf="@+id/imageView7"
-                    app:layout_constraintTop_toBottomOf="@+id/imageView7" />
-            </android.support.constraint.ConstraintLayout>
+            </LinearLayout>
+
+            <include
+                layout="@layout/buttom_plan_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
 
         </LinearLayout>

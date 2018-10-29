@@ -6,6 +6,8 @@ import com.example.administrator.hundreddays.view.StatisticView
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.util.Log
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.SimpleTarget
 import com.example.administrator.hundreddays.constant.HEAD_IMAGE
 import com.example.administrator.hundreddays.constant.USER_NAME
 import com.example.administrator.hundreddays.util.*

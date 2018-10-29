@@ -24,23 +24,20 @@ import com.bumptech.glide.Glide
 import com.example.administrator.hundreddays.constant.*
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog
 import java.util.*
-import android.graphics.BitmapFactory
-import android.R.attr.bitmap
 import android.content.pm.PackageManager
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 
 
 class CreatePlanActivity : BarBaseActivity() ,CreatePlanView {
-
-
     private val TAG = "CreatePlanTAG"
 
     private val presenter = CreatePlanPresenter(this,this)
+    override val contentView: Int get() = R.layout.activity_creat_plan
 
     lateinit var txTitle: EditText
     lateinit var txDays:TextView
-    lateinit var txFrequence:TextView
+    lateinit var txFrequent:TextView
     lateinit var txRemind:TextView
     lateinit var img:ImageView
     lateinit var swRemind:Switch
@@ -51,13 +48,12 @@ class CreatePlanActivity : BarBaseActivity() ,CreatePlanView {
 
     lateinit var processDialog:MaterialDialog
 
-    override val contentView: Int get() = R.layout.activity_creat_plan
 
     override fun init(savedInstanceState: Bundle?) {
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(this,arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),10)
-        }
 
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this,arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),0)
+        }
 
         setTitle("创建新计划")
         initView()
@@ -69,7 +65,7 @@ class CreatePlanActivity : BarBaseActivity() ,CreatePlanView {
         android.R.anim.slide_out_right
         txTitle = find(R.id.ac_creat_title)
         txDays = find(R.id.ac_creat_day)
-        txFrequence = find(R.id.ac_creat_frequence)
+        txFrequent = find(R.id.ac_creat_frequence)
         txRemind = find(R.id.ac_creat_remindtime)
         img = find(R.id.ac_creat_img)
         swRemind = find(R.id.ac_creat_remind)
@@ -88,19 +84,19 @@ class CreatePlanActivity : BarBaseActivity() ,CreatePlanView {
 
         setTopRightButton(object :OnClickListener{
             override fun onClick() {
-                packagePlan()
+                presenter.createPlan(txTitle.text.toString(),txRemind.text.toString(),frequentDay,planDays,bckUri)
             }
         })
 
         txDays.setOnClickListener{
             val ar: TypedArray =  resources.obtainTypedArray(R.array.days)
             MaterialDialog.Builder(this)
-                    .title("选择持续时长")
+                    .title("选择坚持次数")
                     .content("不断挑战自己")
                     .items(R.array.days)
                     .positiveText("确定")
                     .widgetColor(Color.RED)//改变颜色
-                    .itemsCallbackSingleChoice(0) { _, _, _, _ ->
+                    .itemsCallbackSingleChoice(planDays - 30) { _, _, _, _ ->
                         true//false 的时候没有选中样式
                     }
                     //点击确定后获取选中的下标数组
@@ -110,10 +106,13 @@ class CreatePlanActivity : BarBaseActivity() ,CreatePlanView {
                         dialog.dismiss()
                         ar.recycle()
                     }
+                    .onNegative { _, _ ->
+                        ar.recycle()
+                    }
                     .show()
         }
 
-        txFrequence.setOnClickListener{
+        txFrequent.setOnClickListener{
             val ar: TypedArray =  resources.obtainTypedArray(R.array.frequence)
             MaterialDialog.Builder(this)
                     .title("选择执行频率")
@@ -121,20 +120,23 @@ class CreatePlanActivity : BarBaseActivity() ,CreatePlanView {
                     .items(R.array.frequence)
                     .positiveText("确定")
                     .widgetColor(Color.RED)
-                    .itemsCallbackSingleChoice(0) { _, _, _, _ ->
+                    .itemsCallbackSingleChoice(frequentDay - 1) { _, _, _, _ ->
                         true
                     }
                     .onPositive { dialog, _ ->
                         frequentDay = dialog.selectedIndex + 1
-                        txFrequence.text = ar.getString(dialog.selectedIndex)
+                        txFrequent.text = ar.getString(dialog.selectedIndex)
                         dialog.dismiss()
+                        ar.recycle()
+                    }
+                    .onNegative { _, _ ->
                         ar.recycle()
                     }
                     .show()
         }
 
         img.setOnClickListener{
-            presenter.openSelectAvatarDialog(contentView)
+            presenter.openGallery()
         }
 
         txRemind.setOnClickListener{
@@ -147,7 +149,7 @@ class CreatePlanActivity : BarBaseActivity() ,CreatePlanView {
 
         }
 
-        swRemind.setOnCheckedChangeListener { buttonView, isChecked ->
+        swRemind.setOnCheckedChangeListener { _, isChecked ->
             if(isChecked){
                 txRemind.visibility = View.VISIBLE
             }else{
@@ -155,10 +157,6 @@ class CreatePlanActivity : BarBaseActivity() ,CreatePlanView {
             }
         }
 
-    }
-
-    fun packagePlan(){
-        presenter.createPlan(txTitle.text.toString(),txRemind.text.toString(),frequentDay,planDays,bckUri)
     }
 
     override fun setImage(bitmap: Bitmap) {
@@ -176,8 +174,8 @@ class CreatePlanActivity : BarBaseActivity() ,CreatePlanView {
         finish()
     }
 
-    override fun failure(error: Throwable) {
-        toast(error.toString())
+    override fun failure(error: String) {
+        toast(error)
     }
 
     override fun after() {
@@ -190,11 +188,6 @@ class CreatePlanActivity : BarBaseActivity() ,CreatePlanView {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
-            CAMERA_CODE ->{
-                //获得拍的照片
-                val temp = data?.extras?.getParcelable("data") as Bitmap
-                Glide.with(this).load(temp).into(img)
-            }
             GALLERY_CODE ->{
                 //获取到用户所选图片的Uri
                 if(data?.data == null){
@@ -202,7 +195,6 @@ class CreatePlanActivity : BarBaseActivity() ,CreatePlanView {
                     return
                 }
                 bckUri = data.data
-
                 Glide.with(this).load(data.data).into(img)
             }
         }

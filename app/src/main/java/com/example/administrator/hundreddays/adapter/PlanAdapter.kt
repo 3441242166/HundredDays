@@ -6,20 +6,20 @@ import com.bumptech.glide.Glide
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.example.administrator.hundreddays.R
-import com.example.administrator.hundreddays.bean.History
+import com.example.administrator.hundreddays.bean.Plan
 import com.example.administrator.hundreddays.util.DATETYPE
 import com.example.administrator.hundreddays.util.getNowString
 
 
-class PlanAdapter(data: MutableList<History>?,val context: Context) : BaseQuickAdapter<History, BaseViewHolder>(R.layout.item_plan, data) {
+class PlanAdapter(data: MutableList<Plan>?, val context: Context) : BaseQuickAdapter<Plan, BaseViewHolder>(R.layout.item_plan, data) {
 
 
-    override fun convert(helper: BaseViewHolder, item: History) {
+    override fun convert(helper: BaseViewHolder, item: Plan) {
 
-        helper.setText(R.id.item_plan_title, item.plan?.title)
-        helper.setText(R.id.item_plan_keepday, item.keepDay.toString())
+        helper.setText(R.id.item_plan_title, item.title)
+        helper.setText(R.id.item_plan_keepday, item.signDays.toString())
         Glide.with(context)
-                .load(item.plan?.imgPath)
+                .load(item.imgPath)
                 .into(helper.getView(R.id.item_plan_image))
 
         val button = helper.getView<Button>(R.id.item_plan_sign)

@@ -118,7 +118,8 @@ import android.graphics.Bitmap
         if (blurRadius > 25) {
             blurRadius = 25f
         }
-        var outputBitmap: Bitmap?
+
+        val outputBitmap: Bitmap?
         try {
             Class.forName("android.renderscript.ScriptIntrinsicBlur")
             // 计算图片缩小后的长宽
@@ -158,9 +159,6 @@ import android.graphics.Bitmap
             Log.e("Bemboy_Error", "Android版本过低")
             return null
         }
-
-
-
     }
 
 

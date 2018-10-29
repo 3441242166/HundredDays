@@ -1,10 +1,10 @@
 package com.example.administrator.hundreddays.view
 
 import com.example.administrator.hundreddays.base.BaseView
-import com.example.administrator.hundreddays.bean.History
+import com.example.administrator.hundreddays.bean.Plan
 
-interface HistoryView :BaseView<History> {
+interface HistoryView :BaseView<Plan> {
 
-    fun setData(data:MutableList<History>)
+    fun setData(data:MutableList<Plan>)
 
 }

@@ -19,7 +19,7 @@ fun getNowString(type:DATETYPE = DATETYPE.DATE_TIME):String{
     val currentTime = Date()
     val formatter = SimpleDateFormat(type.str)
     val dateString = formatter.format(currentTime)
-    Log.i(TAG, "getNowDateTimeString    $dateString")
+    Log.i(TAG, "getNowDateTimeString   $dateString")
     return dateString
 }
 
@@ -86,15 +86,14 @@ fun differentDay(bdate: String, smdate: String): Int {
 
     val sdf = SimpleDateFormat("yyyy-MM-dd")
 
-    try {
+    return try {
         val d1 = sdf.parse(bdate)
         val d2 = sdf.parse(smdate)
-
         val diff = d1.time - d2.time
         val days = diff / (1000 * 60 * 60 * 24)
-        return days.toInt()
+        days.toInt()
     } catch (e: Exception) {
-        return -1
+        -1
     }
 
 }

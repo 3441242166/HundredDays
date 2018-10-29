@@ -9,13 +9,11 @@ import org.jetbrains.anko.find
 class SettingActivity : BarBaseActivity() {
 
 
-    lateinit var recyclerView: RecyclerView
 
     override val contentView: Int
         get() = R.layout.activity_setting
 
     override fun init(savedInstanceState: Bundle?) {
-        recyclerView = find(R.id.ac_sign_recycler)
 
     }
 

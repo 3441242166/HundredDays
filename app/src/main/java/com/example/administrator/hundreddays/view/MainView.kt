@@ -1,10 +1,9 @@
 package com.example.administrator.hundreddays.view
 
-import android.graphics.Bitmap
 import com.example.administrator.hundreddays.base.BaseView
-import com.example.administrator.hundreddays.bean.History
+import com.example.administrator.hundreddays.bean.Plan
 
-interface MainView : BaseView<MutableList<History>>{
+interface MainView : BaseView<MutableList<Plan>>{
     /**
      * 为指定 pos iamgeview 设置背景图片
      */
@@ -14,7 +13,7 @@ interface MainView : BaseView<MutableList<History>>{
     /**
      * 为 adapter 设置数据
      */
-    fun setData(data:MutableList<History>)
+    fun setData(data:MutableList<Plan>)
     /**
      * 设置
      */
@@ -33,4 +32,5 @@ interface MainView : BaseView<MutableList<History>>{
     fun setViewAlpha(index:Int,alpha:Float)
 
     fun setIndex(index: String)
+    fun setTextViewAlpha(index: Int, alpha: Float)
 }

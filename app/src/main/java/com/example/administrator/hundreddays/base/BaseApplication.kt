@@ -21,7 +21,7 @@ class BaseApplication : Application() {
         Realm.init(this)
         val config = RealmConfiguration.Builder().build()
         Realm.setDefaultConfiguration(config)
-        val dm = resources.displayMetrics;
+        val dm = resources.displayMetrics
         val heigth = dm.heightPixels
         val width = dm.widthPixels
         saveToSharedPreferences(SCREEN_HEIGHT, heigth.toString())

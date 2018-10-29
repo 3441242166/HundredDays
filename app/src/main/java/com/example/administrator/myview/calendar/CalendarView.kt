@@ -72,21 +72,9 @@ class CalendarView @JvmOverloads constructor(context: Context, attrs: AttributeS
         itemWidth = widthSize /7f
         itemHeight = itemWidth
 
-//        val hScale = 1.0f
-//        val vScale = 1.0f
-
-//        if (widthMode != MeasureSpec.UNSPECIFIED && widthSize < mDialWidth) {
-//            hScale = widthSize / mDialWidth
-//        }
-//        if (heightMode != MeasureSpec.UNSPECIFIED && heightSize < mDialHeight) {
-//            vScale = heightSize / mDialHeight
-//        }
-//
-//        val scale = Math.min(hScale, vScale)
-
         setMeasuredDimension(
-                resolveSizeAndState(widthSize, widthMeasureSpec, 0),
-                resolveSizeAndState((itemHeight * 6).toInt(), heightMeasureSpec, 0)
+                resolveSize(widthSize, widthMeasureSpec),
+                resolveSize((itemHeight * 6).toInt(), heightMeasureSpec)
         )
 
 

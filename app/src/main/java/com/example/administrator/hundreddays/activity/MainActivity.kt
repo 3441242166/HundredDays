@@ -4,13 +4,11 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.PagerSnapHelper
 import android.support.v7.widget.RecyclerView
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.View
-import android.view.animation.LinearInterpolator
-import android.widget.AbsListView
+import android.widget.AbsListView.OnScrollListener.*
 import android.widget.ImageView
 import android.widget.TextView
 import com.afollestad.materialdialogs.MaterialDialog
@@ -18,37 +16,35 @@ import com.bumptech.glide.Glide
 import com.example.administrator.hundreddays.R
 import com.example.administrator.hundreddays.adapter.PlanAdapter
 import com.example.administrator.hundreddays.base.BaseActivity
-import com.example.administrator.hundreddays.bean.History
+import com.example.administrator.hundreddays.bean.Plan
 import com.example.administrator.hundreddays.constant.*
 import com.example.administrator.hundreddays.presenter.MainPresenter
 import com.example.administrator.hundreddays.util.PagingScrollHelper
 import com.example.administrator.hundreddays.view.MainView
 import com.joaquimley.faboptions.FabOptions
-import com.example.administrator.hundreddays.util.getBlurPath
 import com.example.administrator.hundreddays.util.getValueFromSharedPreferences
 import org.jetbrains.anko.*
+import javax.security.auth.login.LoginException
 
 class MainActivity : BaseActivity() , MainView,View.OnClickListener {
     private val TAG = "MainActivity"
+    private val mainPresenter:MainPresenter = MainPresenter(this,this)
 
     private lateinit var title:TextView
     private lateinit var preTitle:TextView
     private lateinit var nextTitle:TextView
     private lateinit var indicate:TextView
-
     private lateinit var bck:ImageView
     private lateinit var preBck:ImageView
     private lateinit var nextBck:ImageView
-
     private lateinit var recycler:RecyclerView
     private lateinit var fab: FabOptions
 
-    private val mainPresenter:MainPresenter = MainPresenter(this,this)
     private val adapter: PlanAdapter = PlanAdapter(null,this)
     private var scrollHelper: PagingScrollHelper = PagingScrollHelper()
-
     private lateinit var bckAr:Array<ImageView>
     private lateinit var titleAr:Array<TextView>
+    private var index = 0
 
     override val contentView: Int get() = R.layout.activity_main
 
@@ -58,68 +54,40 @@ class MainActivity : BaseActivity() , MainView,View.OnClickListener {
         mainPresenter.initData()
     }
 
-    var startPos = 0f
-    val maxPos = getValueFromSharedPreferences(SCREEN_WIDTH)!!.toInt()
+    var startPos = 0
     private fun initEvent() {
         fab.setOnClickListener(this)
 
         adapter.setOnItemClickListener { _, view, position ->
-              startActivity<PlanMessageActivity>(DATA to adapter.data[position].id)
+              startActivity<PlanMessageActivity>(DATA to adapter.data[position].id , IMAGE_PATH to adapter.data[position].imgPath)
 //            val intent = Intent(this, PlanMessageActivity::class.java)
 //            val bundle = ActivityOptions.makeSceneTransitionAnimation(this,view.find(R.id.item_plan_image),"bck").toBundle()
 //            intent.putExtra(DATA,adapter.data[position].id)
 //            startActivity(intent,bundle)
         }
 
-        adapter.setOnItemChildClickListener { _, _, position ->
-            toast("sign")
+        adapter.setOnItemChildClickListener { _, view, _ ->
             MaterialDialog.Builder(this).title("日记")
                     .input("写一些东西吧","") { _, input ->
-                        mainPresenter.sign(position,input.toString())
+                        mainPresenter.sign(input.toString())
                     }.show()
         }
 
-        scrollHelper.setOnPageChangeListener(object : PagingScrollHelper.onPageChangeListener {
+        scrollHelper.setOnPageChangeListener(object : PagingScrollHelper.OnPageChangeListener {
             override fun onPageChange(index: Int) {
                 mainPresenter.changeIndex(index)
-                startPos = 0f
+                startPos = 0
             }
-        })
-
-        title.setOnClickListener{
-            //title.animate().translationX(50f)
-            alert("你好","标题"){
-            positiveButton("yes") {}
-            negativeButton("no"){}
-        }.show()}
-
-        title.addTextChangedListener(object :TextWatcher{
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-//                Log.i(TAG,"s =$s  start=$start before=$before count=$count")
-//                val animationSet = AnimationSet(true)
-//                val alphaAnimation1 = AlphaAnimation(0f, 1f)
-//                alphaAnimation1.duration = 200
-//                animationSet.addAnimation(alphaAnimation1)
-//                title.startAnimation(animationSet)
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-
-            }
-
         })
 
         recycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                startPos +=dx
-                val alpha = (255*startPos/maxPos)
+                Log.i(TAG, " sumPos = $startPos  index = $index")
+                startPos += dx
+                val alpha = 255 * startPos.toFloat() / recycler.width
+                Log.i(TAG, " alpha = $alpha recycler.width = ${recycler.width}")
                 mainPresenter.changeAlpha(alpha)
-                Log.i(TAG,"dx = $dx  dy = $dy startPos = $startPos  alpha = $alpha")
+
             }
         })
     }
@@ -134,20 +102,21 @@ class MainActivity : BaseActivity() , MainView,View.OnClickListener {
         nextBck = find(R.id.ac_main_bck_next)
         recycler = find(R.id.ac_main_recycler)
         fab = find(R.id.ac_main_menu)
+
         preBck.imageAlpha = 0
         nextBck.imageAlpha = 0
-
+        preTitle.textColor  = Color.argb(0, 255, 255, 255)
+        nextTitle.textColor  = Color.argb(0, 255, 255, 255)
         bckAr= arrayOf(preBck,bck,nextBck)
         titleAr = arrayOf(preTitle,title,nextTitle)
 
         recycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-
         recycler.adapter = adapter
         scrollHelper.setUpRecycleView(recycler)
+        //PagerSnapHelper().attachToRecyclerView(recycler)
 
         fab.setFabColor(R.color.fabColor)
         fab.setBackgroundColor(this,0x00000000)
-
     }
 
     override fun onClick(v: View?) {
@@ -161,11 +130,11 @@ class MainActivity : BaseActivity() , MainView,View.OnClickListener {
             R.id.fab_setting ->{
                 startActivityForResult(Intent(
                         this,
-                        HistoryActivity::class.java
+                        PlanListActivity::class.java
                 ),PLAN_LIST)
             }
             R.id.fab_list -> {
-                startActivity<StatisticActivity>()
+                startActivity<MenuActivity>()
             }
             R.id.fab_other -> {
                 startActivity<SettingActivity>()
@@ -189,21 +158,11 @@ class MainActivity : BaseActivity() , MainView,View.OnClickListener {
         }
     }
 
-    override fun setData(data: MutableList<History>) {
+    override fun setData(data: MutableList<Plan>) {
         adapter.setNewData(data)
     }
 
     override fun setMessage(pos:Int,name:String) {
-
-//        val animation = AnimatorInflater.loadAnimator(this,R.animator.slide_in_left)
-//        animation.setTarget(this.name)
-//        animation.start()
-
-//        title.animate()
-//                .alpha(1f)
-//                .interpolator = LinearInterpolator()
-
-        //title.postDelayed({title.text = name},300)
         titleAr[pos].text = name
     }
 
@@ -221,6 +180,9 @@ class MainActivity : BaseActivity() , MainView,View.OnClickListener {
 
     override fun setViewAlpha(index: Int, alpha: Float) {
         bckAr[index].imageAlpha  = alpha.toInt()
+    }
+
+    override fun setTextViewAlpha(index: Int, alpha: Float) {
         titleAr[index].textColor  = Color.argb(alpha.toInt(), 255, 255, 255)
     }
 

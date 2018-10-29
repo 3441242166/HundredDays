@@ -44,7 +44,7 @@ class PagingScrollHelper {
             }
         }
 
-    internal var mOnPageChangeListener: onPageChangeListener? = null
+    internal var mOnPageChangeListener: OnPageChangeListener? = null
 
 
     internal enum class ORIENTATION {
@@ -59,7 +59,7 @@ class PagingScrollHelper {
         //处理滑动
         recycleView.onFlingListener = mOnFlingListener
         //设置滚动监听，记录滚动的状态，和总的偏移量
-        recycleView.setOnScrollListener(mOnScrollListener)
+        recycleView.addOnScrollListener(mOnScrollListener)
         //记录滚动开始的位置
         recycleView.setOnTouchListener(mOnTouchListener)
         //获取滚动的方向
@@ -214,11 +214,11 @@ class PagingScrollHelper {
 
     }
 
-    fun setOnPageChangeListener(listener: onPageChangeListener) {
+    fun setOnPageChangeListener(listener: OnPageChangeListener) {
         mOnPageChangeListener = listener
     }
 
-    interface onPageChangeListener {
+    interface OnPageChangeListener {
         fun onPageChange(index: Int)
     }
 

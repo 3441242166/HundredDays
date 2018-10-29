@@ -12,7 +12,6 @@ val SIZETYPE_GB = 4//获取文件大小单位为GB的double值
 
 /**
  * 获取文件指定文件的指定单位的大小
- *
  * @param filePath 文件路径
  * @param sizeType 获取大小的类型1为B、2为KB、3为MB、4为GB
  * @return double值的大小
@@ -43,10 +42,10 @@ fun getAutoFileOrFilesSize(filePath: String): String {
     val file = File(filePath)
     var blockSize: Long = 0
     try {
-        if (file.isDirectory) {
-            blockSize = getFileSizes(file)
+        blockSize = if (file.isDirectory) {
+            getFileSizes(file)
         } else {
-            blockSize = getFileSize(file)
+            getFileSize(file)
         }
     } catch (e: Exception) {
         e.printStackTrace()
@@ -57,7 +56,6 @@ fun getAutoFileOrFilesSize(filePath: String): String {
 
 /**
  * 获取指定文件大小
- *
  * @param file
  * @return
  * @throws Exception

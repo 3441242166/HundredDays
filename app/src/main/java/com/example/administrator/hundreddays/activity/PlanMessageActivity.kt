@@ -1,5 +1,6 @@
 package com.example.administrator.hundreddays.activity
 
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.os.Handler
 import android.support.constraint.ConstraintLayout
@@ -10,9 +11,6 @@ import com.example.administrator.hundreddays.base.BaseActivity
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.bumptech.glide.request.RequestOptions
 import com.example.administrator.hundreddays.bean.Plan
 import com.example.administrator.hundreddays.bean.Sign
 import com.example.administrator.hundreddays.constant.DATA
@@ -20,6 +18,7 @@ import com.example.administrator.hundreddays.constant.SCREEN_HEIGHT
 import com.example.administrator.hundreddays.presenter.PlanMessagePresenter
 import com.example.administrator.hundreddays.util.getValueFromSharedPreferences
 import com.example.administrator.hundreddays.view.PlanMessageView
+import com.example.administrator.myview.PercentView
 import com.example.administrator.myview.calendar.PlanCalendar
 import org.jetbrains.anko.find
 import org.jetbrains.anko.toast
@@ -39,6 +38,7 @@ class PlanMessageActivity : BaseActivity() ,PlanMessageView{
     private lateinit var layout:LinearLayout
     private lateinit var nestedLayout: NestedScrollView
     private lateinit var calendar: PlanCalendar
+    private lateinit var precentView: PercentView
     private lateinit var viewStub: ViewStub
 
     override val contentView: Int get() = R.layout.activity_plan_message
@@ -47,15 +47,14 @@ class PlanMessageActivity : BaseActivity() ,PlanMessageView{
         initView()
         initEvent()
         presenter.initData(intent.getStringExtra(DATA))
-        //presenter.lateInit()
         Handler().postDelayed({presenter.lateInit()},100)
     }
 
-    private val MAX_POSITION = getValueFromSharedPreferences(SCREEN_HEIGHT)!!.toInt()/2
     private fun initEvent() {
+        val maxPos = getValueFromSharedPreferences(SCREEN_HEIGHT)!!.toInt()/2
         nestedLayout.setOnScrollChangeListener { _: NestedScrollView?, _: Int, scrollY: Int, _: Int, _: Int ->
-            if(scrollY<MAX_POSITION){
-                bck.imageAlpha = 255 - (255*scrollY/MAX_POSITION)
+            if(scrollY<maxPos){
+                bck.imageAlpha = 255 - (255*scrollY/maxPos)
             }else{
                 bck.imageAlpha = 0
             }
@@ -73,6 +72,8 @@ class PlanMessageActivity : BaseActivity() ,PlanMessageView{
         headLayout = find(R.id.ac_message_head)
         layout = find(R.id.ac_message_layout)
         nestedLayout = find(R.id.ac_message_nested)
+        precentView = find(R.id.ac_message_present)
+
         val dm = resources.displayMetrics
         headLayout.maxHeight = dm.heightPixels
         headLayout.minHeight = dm.heightPixels
@@ -80,12 +81,15 @@ class PlanMessageActivity : BaseActivity() ,PlanMessageView{
 
     override fun returnMessage(plan: Plan, totalSign: Int, state: String, isFinish: Boolean) {
         title.text = plan.title
-        Glide.with(this).load(plan.imgPath).transition(DrawableTransitionOptions().crossFade()).apply(RequestOptions()).into(bck)
-
         sign.text = "$totalSign 签到"
         message.text = if(isFinish) "今日完成" else "未签到"
         ing.text = state
 
+        precentView.setMainProcess((plan.signDays*100.0/plan.targetTimes).toFloat())
+        precentView.setMainText("进度")
+        precentView.setLeftText("${plan.signDays}天")
+        precentView.setRightText("${plan.targetTimes - plan.signDays}天")
+        precentView.invalidate()
     }
 
     override fun setSignData(signMap: MutableMap<String, Sign>) {
@@ -93,6 +97,7 @@ class PlanMessageActivity : BaseActivity() ,PlanMessageView{
         viewStub.inflate()
         calendar = find(R.id.ac_message_calendar)
         calendar.setData(signMap)
+
         calendar.setOnDateSelectListener(object : PlanCalendar.OnDateSelectListener{
             override fun onDateSelect(date: String) {
                 toast(date)
@@ -101,11 +106,12 @@ class PlanMessageActivity : BaseActivity() ,PlanMessageView{
         })
     }
 
-    override fun setBlurBck(path: String) {
-        Glide.with(this)
-                .load(path)
-                .into(blurBck)
+    override fun setBlurBck(bitmap: Bitmap) {
+        blurBck.setImageBitmap(bitmap)
     }
 
+    override fun setBck(bitmap: Bitmap) {
+        bck.setImageBitmap(bitmap)
+    }
 }
 

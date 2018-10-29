@@ -1,26 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/item_grid_layout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    android:orientation="vertical">
+    android:layout_height="220dp"
+    android:layout_margin="20dp"
+    android:background="#552244">
+
 
     <ImageView
         android:id="@+id/item_grid_image"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_gravity="center"
-        android:layout_margin="10dp" />
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@mipmap/ic_launcher" />
 
     <TextView
         android:id="@+id/item_grid_text"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textColor="@color/secondBlack"
-        android:layout_gravity="center"
-        android:layout_marginBottom="5dp"
-        android:gravity="center"
-        android:text="文字"
-        android:textSize="14sp" />
-
-</LinearLayout>
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="16dp"
+        android:text="TextViewTextView"
+        android:textColor="@color/textWrite"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/item_grid_image"
+        app:layout_constraintStart_toStartOf="@+id/item_grid_image"
+        app:layout_constraintTop_toBottomOf="@+id/item_grid_image"
+        app:layout_constraintVertical_bias="0.0" />
+</android.support.constraint.ConstraintLayout>

@@ -8,6 +8,6 @@ interface PlanMessageView {
 
     fun returnMessage(plan: Plan, totalSign: Int, state: String, isFinish: Boolean)
     fun setSignData(signMap: MutableMap<String, Sign>)
-    fun setBlurBck(path: String)
-
+    fun setBlurBck(bitmap: Bitmap)
+    fun setBck(bitmap: Bitmap)
 }

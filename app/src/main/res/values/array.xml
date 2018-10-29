@@ -86,20 +86,12 @@
         <item>每周</item>
     </string-array>
 
-    <string-array name="type">
-        <item>所有</item>
-        <item>已完成</item>
-        <item>未完成</item>
-    </string-array>
-
     <string-array name="sort">
-        <item>时间顺序</item>
-        <item>签到天数</item>
+        <item>默认</item>
+        <item>时间</item>
+        <item>紧急</item>
+        <item>时长</item>
     </string-array>
 
-    <string-array name="other">
-        <item>时间顺序</item>
-        <item>签到天数</item>
-    </string-array>
 
 </resources>

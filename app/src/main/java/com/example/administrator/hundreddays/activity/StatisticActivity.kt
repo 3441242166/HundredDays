@@ -81,7 +81,7 @@ class StatisticActivity : AppCompatActivity(), StatisticView {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         Log.i(TAG,"$requestCode $resultCode $data")
         //获取到用户所选图片的Uri
-        if (data?.data == null) {
+        if (data == null || data.data == null) {
             Log.i(TAG,"onActivityResult  data is null")
             return
         }

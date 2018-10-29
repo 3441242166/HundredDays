@@ -1,48 +1,28 @@
 package com.example.administrator.hundreddays.adapter
 
 import android.content.Context
+import android.view.View
+import android.widget.RadioButton
 import com.bumptech.glide.Glide
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.example.administrator.hundreddays.R
-import com.example.administrator.hundreddays.base.BaseApplication
-import com.example.administrator.hundreddays.bean.History
-import com.example.administrator.hundreddays.constant.PLAN_CANCEL
-import com.example.administrator.hundreddays.constant.PLAN_COMPLETE
-import com.example.administrator.hundreddays.constant.PLAN_FAIL
-import com.example.administrator.hundreddays.constant.PLAN_ING
+import com.example.administrator.hundreddays.bean.Plan
+import com.example.administrator.hundreddays.util.DATETYPE
+import com.example.administrator.hundreddays.util.getNowString
 
-class HistoryAdapter(data: MutableList<History>?,val context: Context) : BaseQuickAdapter<History, BaseViewHolder>(R.layout.item_history, data) {
+class HistoryAdapter(data: MutableList<Plan>?, val context: Context) : BaseQuickAdapter<Plan, BaseViewHolder>(R.layout.item_history, data) {
 
     constructor(context: Context):this(null,context)
 
-    override fun convert(helper: BaseViewHolder, item: History) {
+    override fun convert(helper: BaseViewHolder, item: Plan) {
 
-        helper.setText(R.id.item_history_title, item.plan?.title)
-        helper.setText(R.id.item_history_date, item.plan?.createDateTime)
-        Glide.with(BaseApplication.context)
-                .load(item.plan?.imgPath)
-                .into(helper.getView(R.id.item_history_img))
+        helper.setText(R.id.item_history_title, item.title)
+        helper.setText(R.id.item_history_days, item.signDays.toString())
 
-        when(item.state){
-            PLAN_COMPLETE->{
-                Glide.with(BaseApplication.context)
-                        .load(R.drawable.icon_unfinish)
-                        .into(helper.getView(R.id.item_history_finish))
-            }
-            PLAN_ING->{
-
-            }
-            PLAN_FAIL->{
-
-            }
-            PLAN_CANCEL->{
-
-            }
-        }
-
-
-        helper.setText(R.id.item_history_days, item.keepDay.toString())
+        val view = helper.getView<View>(R.id.item_history_lv)
+        val button = helper.getView<RadioButton>(R.id.item_history_sign)
+        button.isChecked = getNowString(DATETYPE.DATE_DATE) == item.lastSignDate
     }
 }
 
