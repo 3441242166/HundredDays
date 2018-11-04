@@ -27,6 +27,7 @@ import java.util.*
 import android.content.pm.PackageManager
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
+import android.support.v7.widget.RecyclerView
 
 
 class CreatePlanActivity : BarBaseActivity() ,CreatePlanView {
@@ -41,6 +42,7 @@ class CreatePlanActivity : BarBaseActivity() ,CreatePlanView {
     lateinit var txRemind:TextView
     lateinit var img:ImageView
     lateinit var swRemind:Switch
+    lateinit var recyclerView: RecyclerView
 
     var bckUri:Uri? = null
     var planDays:Int = 30
@@ -69,10 +71,13 @@ class CreatePlanActivity : BarBaseActivity() ,CreatePlanView {
         txRemind = find(R.id.ac_creat_remindtime)
         img = find(R.id.ac_creat_img)
         swRemind = find(R.id.ac_creat_remind)
+        recyclerView = find(R.id.ac_creat_recommend)
 
         processDialog = MaterialDialog.Builder(this).title("Ing....")
                 .progress(true, 100, true)
                 .build()
+
+
     }
 
     private fun initEvent(){

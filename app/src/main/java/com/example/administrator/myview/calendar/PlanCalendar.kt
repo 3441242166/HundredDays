@@ -61,8 +61,8 @@ class PlanCalendar @JvmOverloads constructor(context: Context, attrs: AttributeS
 
         recycler.layoutManager = layoutManager
         PagerSnapHelper().attachToRecyclerView(recycler)
-        scrollHelper.setUpRecycleView(recycler)
-
+        //scrollHelper.setUpRecycleView(recycler)
+        Log.i(TAG,"signMap.size = ${signMap.size}")
         val adapter = CalendarAdapter(data, signMap)
         recycler.adapter = adapter
         recycler.setHasFixedSize(true)

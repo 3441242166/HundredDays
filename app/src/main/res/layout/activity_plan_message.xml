@@ -50,12 +50,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <ViewStub
-                android:id="@+id/ac_message_stub"
+            <com.example.administrator.myview.calendar.PlanCalendar
+                android:id="@+id/ac_message_calendar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="30dp"
-                android:layout="@layout/content_plan_message" />
+                android:layout_marginBottom="30dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"

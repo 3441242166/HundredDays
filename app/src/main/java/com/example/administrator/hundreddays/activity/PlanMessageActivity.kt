@@ -39,7 +39,6 @@ class PlanMessageActivity : BaseActivity() ,PlanMessageView{
     private lateinit var nestedLayout: NestedScrollView
     private lateinit var calendar: PlanCalendar
     private lateinit var precentView: PercentView
-    private lateinit var viewStub: ViewStub
 
     override val contentView: Int get() = R.layout.activity_plan_message
 
@@ -73,6 +72,8 @@ class PlanMessageActivity : BaseActivity() ,PlanMessageView{
         layout = find(R.id.ac_message_layout)
         nestedLayout = find(R.id.ac_message_nested)
         precentView = find(R.id.ac_message_present)
+        calendar = find(R.id.ac_message_calendar)
+
 
         val dm = resources.displayMetrics
         headLayout.maxHeight = dm.heightPixels
@@ -93,9 +94,6 @@ class PlanMessageActivity : BaseActivity() ,PlanMessageView{
     }
 
     override fun setSignData(signMap: MutableMap<String, Sign>) {
-        viewStub = find(R.id.ac_message_stub)
-        viewStub.inflate()
-        calendar = find(R.id.ac_message_calendar)
         calendar.setData(signMap)
 
         calendar.setOnDateSelectListener(object : PlanCalendar.OnDateSelectListener{

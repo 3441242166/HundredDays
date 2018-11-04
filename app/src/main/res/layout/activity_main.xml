@@ -43,54 +43,42 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
 
-    <com.joaquimley.faboptions.FabOptions
-        android:id="@+id/ac_main_menu"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
-        app:button_menu="@menu/main_menu"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
 
     <TextView
         android:id="@+id/ac_main_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="136dp"
         android:textAlignment="center"
         android:textColor="@color/textWrite"
         android:textSize="56sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ac_main_menu" />
+        app:layout_constraintTop_toTopOf="@+id/ac_main_bck_next" />
 
     <TextView
         android:id="@+id/ac_main_title_pre"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="136dp"
         android:textAlignment="center"
         android:textColor="@color/textWrite"
         android:textSize="56sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ac_main_menu" />
+        app:layout_constraintTop_toTopOf="@+id/ac_main_bck_next" />
 
     <TextView
         android:id="@+id/ac_main_title_next"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="136dp"
         android:textAlignment="center"
         android:textColor="@color/textWrite"
         android:textSize="56sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ac_main_menu" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/ac_main_recycler"
@@ -117,6 +105,16 @@
         app:layout_constraintEnd_toEndOf="@+id/ac_main_recycler"
         app:layout_constraintStart_toStartOf="@+id/ac_main_recycler"
         app:layout_constraintTop_toBottomOf="@+id/ac_main_recycler" />
+
+    <ImageView
+        android:id="@+id/ac_main_back"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="56dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/icon_exit" />
 
 
 </android.support.constraint.ConstraintLayout>

@@ -72,12 +72,15 @@ class MainPresenter(val view: MainView, private val context: Context,val realm: 
         if(temp.signDays+1 == temp.targetTimes){
             temp.planState = PLAN_COMPLETE
         }
+
         if(temp.lastSignDate != getNowString(DATETYPE.DATE_DATE)) {
             temp.signDays ++
         }
         temp.lastSignDate = getNowString(DATETYPE.DATE_DATE)
+
         var sign = realm?.where(Sign::class.java)
-                ?.endsWith("planId",temp.id)
+                ?.equalTo("date",temp.lastSignDate)
+                ?.equalTo("planId",temp.id)
                 ?.findFirst()
         if (sign == null){
             sign = realm?.createObject(Sign::class.java,UUID.randomUUID().toString())
@@ -89,7 +92,9 @@ class MainPresenter(val view: MainView, private val context: Context,val realm: 
             sign.date = getNowString(DATETYPE.DATE_DATE)
             sign.planId = temp.id!!
             sign.plan = temp
+            Log.i(TAG,"新的签到")
         }else{
+            Log.i(TAG,"重新签到")
             sign.message = message
         }
         //------------------------------------------------------------------------------------------
@@ -131,21 +136,7 @@ class MainPresenter(val view: MainView, private val context: Context,val realm: 
         view.setIndex("${position+1}/${planList.size}")
 
         //----------------------------------weakHashMap---------------------------------------------
-        if(bitmapMap[planList[position].id] == null) {
-            bitmapMap.clear()
-            Glide.with(context)
-                    .asBitmap()
-                    .load(planList[position].imgPath)
-                    .into(bitmapTarget)
-        }
 
-        if(blurBitmapMap[planList[position].id] == null) {
-            blurBitmapMap.clear()
-            Glide.with(context)
-                    .asBitmap()
-                    .load(getMessageBlurPath(planList[position].imgPath))
-                    .into(blurBitmapTarget)
-        }
        // ------------------------------------------------------------------------------------------
 
         //Log.i(TAG,"after pre = $pre  now = $now  next = $next")
@@ -154,13 +145,6 @@ class MainPresenter(val view: MainView, private val context: Context,val realm: 
     private val bitmapTarget =object :  SimpleTarget<Bitmap>(getValueFromSharedPreferences(SCREEN_WIDTH)!!.toInt()/2,getValueFromSharedPreferences(SCREEN_HEIGHT)!!.toInt()/2){
         override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
             Log.i(TAG,"getBitmap")
-            bitmapMap[planList[position].id!!] = resource
-        }
-    }
-    private val blurBitmapTarget =object :  SimpleTarget<Bitmap>(getValueFromSharedPreferences(SCREEN_WIDTH)!!.toInt()/2,getValueFromSharedPreferences(SCREEN_HEIGHT)!!.toInt()/2){
-        override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-            Log.i(TAG,"getBlurBitmap")
-            blurBitmapMap[planList[position].id!!] = resource
         }
     }
 

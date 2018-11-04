@@ -10,15 +10,18 @@ tools:context=".activity.CreatePlanActivity">
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        tools:context=".activity.MenuActivity">
 
-        <TextView
-            android:id="@+id/textView3"
+        <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="16dp"
             android:layout_marginTop="16dp"
             android:text="照片封面"
             android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/textView4"
             app:layout_constraintTop_toBottomOf="@+id/textView27" />
 
@@ -120,14 +123,16 @@ tools:context=".activity.CreatePlanActivity">
 
 
         <ImageView
+            android:src="@mipmap/ic_launcher"
             android:id="@+id/ac_creat_img"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginTop="16dp"
             android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/ac_creat_frequence"
-            app:layout_constraintStart_toStartOf="@+id/textView3"
-            app:layout_constraintTop_toBottomOf="@+id/textView3" />
+            app:layout_constraintTop_toBottomOf="@+id/textView27" />
 
         <TextView
             android:id="@+id/textView27"
@@ -151,7 +156,7 @@ tools:context=".activity.CreatePlanActivity">
             android:layout_marginTop="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ac_creat_title" />
+            app:layout_constraintTop_toBottomOf="@+id/ac_creat_recommend" />
 
         <TextView
             android:id="@+id/textView25"
@@ -170,6 +175,15 @@ tools:context=".activity.CreatePlanActivity">
             app:layout_constraintBottom_toTopOf="@+id/textView26"
             app:layout_constraintEnd_toEndOf="@+id/ac_creat_remind"
             app:layout_constraintTop_toBottomOf="@+id/ac_creat_remind" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/ac_creat_recommend"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="@+id/ac_creat_title"
+            app:layout_constraintStart_toStartOf="@+id/ac_creat_title"
+            app:layout_constraintTop_toBottomOf="@+id/ac_creat_title" />
 
     </android.support.constraint.ConstraintLayout>
 

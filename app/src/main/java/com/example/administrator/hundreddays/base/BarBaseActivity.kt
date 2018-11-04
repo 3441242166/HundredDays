@@ -1,6 +1,7 @@
 package com.example.administrator.hundreddays.base
 
 import android.os.Bundle
+import android.support.constraint.ConstraintLayout
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.text.TextUtils
@@ -15,7 +16,7 @@ import android.widget.Button
 
 abstract class BarBaseActivity : AppCompatActivity() {
 
-    lateinit var toolbar: Toolbar
+    lateinit var toolbar: ConstraintLayout
     lateinit var viewContent: FrameLayout
     lateinit var tvTitle: TextView
     lateinit var btnRight: Button
@@ -42,7 +43,6 @@ abstract class BarBaseActivity : AppCompatActivity() {
         btnRight = find(R.id.ac_base_right)
         btnLeft = find(R.id.ac_base_left)
         //初始化设置 Toolbar
-        setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
         //将继承 TopBarBaseActivity 的布局解析到 FrameLayout 里面
@@ -51,8 +51,10 @@ abstract class BarBaseActivity : AppCompatActivity() {
         init(savedInstanceState)
     }
 
-    fun setToolbarFitsSystem(isFit: Boolean) {
-        toolbar.fitsSystemWindows = isFit
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+//        val params = toolbar.layoutParams
+//        params.height = (toolbar.height + Math.ceil(((25 * resources.displayMetrics.density).toDouble()))).toInt()
+//        toolbar.layoutParams = params
     }
 
     protected fun setTitle(title: String) {
@@ -64,11 +66,10 @@ abstract class BarBaseActivity : AppCompatActivity() {
         btnLeft.visibility = View.VISIBLE
 
         btnLeft.setBackgroundResource(icon)
-        val linearParams = btnLeft.getLayoutParams()
-        linearParams.height = 42
-        linearParams.width = 42
+        val linearParams = btnLeft.layoutParams
+        linearParams.height = 54
+        linearParams.width = 54
         btnLeft.layoutParams = linearParams
-
         this.onClickListenerTopLeft = onClickListener
         btnLeft.setOnClickListener { onClickListenerTopLeft.onClick() }
     }
@@ -77,9 +78,9 @@ abstract class BarBaseActivity : AppCompatActivity() {
         btnRight.visibility = View.VISIBLE
 
         btnRight.setBackgroundResource(icon)
-        val linearParams = btnRight.getLayoutParams()
-        linearParams.height = 42
-        linearParams.width = 42
+        val linearParams = btnRight.layoutParams
+        linearParams.height = 54
+        linearParams.width = 54
         btnRight.layoutParams = linearParams
 
         this.onClickListenerTopRight = onClickListener

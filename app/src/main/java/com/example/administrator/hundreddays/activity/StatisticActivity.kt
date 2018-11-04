@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide
 import com.example.administrator.hundreddays.R
 import com.example.administrator.hundreddays.presenter.StatisticPresenter
 import com.example.administrator.hundreddays.view.StatisticView
+import com.example.administrator.myview.statisticsview.StatisticLayout
 import de.hdodenhof.circleimageview.CircleImageView
 
 import org.jetbrains.anko.find
@@ -27,6 +28,7 @@ class StatisticActivity : AppCompatActivity(), StatisticView {
     private lateinit var imgBck:ImageView
     private lateinit var imgHead:CircleImageView
     private lateinit var txName:TextView
+    private lateinit var statisticView:StatisticLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,6 +48,7 @@ class StatisticActivity : AppCompatActivity(), StatisticView {
         imgBck = find(R.id.ac_statistic_bck)
         imgHead = find(R.id.ac_statistic_head)
         txName = find(R.id.ac_statistic_name)
+        statisticView = find(R.id.ac_statistic_statistic)
     }
 
     private fun initEvent() {

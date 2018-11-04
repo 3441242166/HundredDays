@@ -16,10 +16,10 @@ class MenuActivity : BaseActivity() {
             CreatePlanActivity::class.java, StatisticActivity::class.java,
             SettingActivity::class.java, CreatePlanActivity::class.java,
             CreatePlanActivity::class.java, CreatePlanActivity::class.java)
-    private val TITLE = arrayOf("Animation", "MultipleItem",
-            "Header/Footer", "PullToRefresh",
-            "Section", "EmptyView", "DragAndSwipe",
-            "ItemClick", "ExpandableItem")
+    private val TITLE = arrayOf("PlanList", "History",
+            "CreatePlan", "Statistic",
+            "Setting", "Honor", "Nothing",
+            "Nothing", "Nothing")
     private val IMG = arrayOf(R.drawable.usericon_0, R.drawable.usericon_1,
             R.drawable.usericon_2, R.drawable.usericon_3,
             R.drawable.usericon_4, R.drawable.usericon_5,

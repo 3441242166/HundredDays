@@ -26,7 +26,7 @@ import com.example.administrator.hundreddays.util.getValueFromSharedPreferences
 import org.jetbrains.anko.*
 import javax.security.auth.login.LoginException
 
-class MainActivity : BaseActivity() , MainView,View.OnClickListener {
+class MainActivity : BaseActivity() , MainView {
     private val TAG = "MainActivity"
     private val mainPresenter:MainPresenter = MainPresenter(this,this)
 
@@ -38,13 +38,12 @@ class MainActivity : BaseActivity() , MainView,View.OnClickListener {
     private lateinit var preBck:ImageView
     private lateinit var nextBck:ImageView
     private lateinit var recycler:RecyclerView
-    private lateinit var fab: FabOptions
+    private lateinit var fab: ImageView
 
     private val adapter: PlanAdapter = PlanAdapter(null,this)
     private var scrollHelper: PagingScrollHelper = PagingScrollHelper()
     private lateinit var bckAr:Array<ImageView>
     private lateinit var titleAr:Array<TextView>
-    private var index = 0
 
     override val contentView: Int get() = R.layout.activity_main
 
@@ -56,7 +55,9 @@ class MainActivity : BaseActivity() , MainView,View.OnClickListener {
 
     var startPos = 0
     private fun initEvent() {
-        fab.setOnClickListener(this)
+        fab.setOnClickListener {
+            finish()
+        }
 
         adapter.setOnItemClickListener { _, view, position ->
               startActivity<PlanMessageActivity>(DATA to adapter.data[position].id , IMAGE_PATH to adapter.data[position].imgPath)
@@ -82,14 +83,18 @@ class MainActivity : BaseActivity() , MainView,View.OnClickListener {
 
         recycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
-                Log.i(TAG, " sumPos = $startPos  index = $index")
+               // Log.i(TAG, " sumPos = $startPos  index = $index")
                 startPos += dx
                 val alpha = 255 * startPos.toFloat() / recycler.width
-                Log.i(TAG, " alpha = $alpha recycler.width = ${recycler.width}")
+                //Log.i(TAG, " alpha = $alpha recycler.width = ${recycler.width}")
                 mainPresenter.changeAlpha(alpha)
 
             }
         })
+
+        recycler.setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+            Log.i(TAG, "onScrollChange: scrollX = $scrollX  oldScrollX = $oldScrollX")
+        }
     }
 
     private fun initView() {
@@ -101,7 +106,7 @@ class MainActivity : BaseActivity() , MainView,View.OnClickListener {
         preBck = find(R.id.ac_main_bck_pre)
         nextBck = find(R.id.ac_main_bck_next)
         recycler = find(R.id.ac_main_recycler)
-        fab = find(R.id.ac_main_menu)
+        fab = find(R.id.ac_main_back)
 
         preBck.imageAlpha = 0
         nextBck.imageAlpha = 0
@@ -114,32 +119,6 @@ class MainActivity : BaseActivity() , MainView,View.OnClickListener {
         recycler.adapter = adapter
         scrollHelper.setUpRecycleView(recycler)
         //PagerSnapHelper().attachToRecyclerView(recycler)
-
-        fab.setFabColor(R.color.fabColor)
-        fab.setBackgroundColor(this,0x00000000)
-    }
-
-    override fun onClick(v: View?) {
-        when (v?.id) {
-            R.id.fab_add ->{
-                startActivityForResult(Intent(
-                        this,
-                        CreatePlanActivity::class.java
-                ),CREATE_PLAN)
-            }
-            R.id.fab_setting ->{
-                startActivityForResult(Intent(
-                        this,
-                        PlanListActivity::class.java
-                ),PLAN_LIST)
-            }
-            R.id.fab_list -> {
-                startActivity<MenuActivity>()
-            }
-            R.id.fab_other -> {
-                startActivity<SettingActivity>()
-            }
-        }
     }
 
     override fun signSuccess(pos:Int){

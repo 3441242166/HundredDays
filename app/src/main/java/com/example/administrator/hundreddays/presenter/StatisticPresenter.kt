@@ -42,6 +42,10 @@ class StatisticPresenter(val context: Context,val view: StatisticView){
 
     }
 
+    fun getStatisticData(){
+
+    }
+
     fun saveHeadImage(uri: Uri?) {
         val bitmap = getBitmapFromUri(context,uri)
         val path = saveBitmapToLocal(HEAD_IMAGE, bitmap)
